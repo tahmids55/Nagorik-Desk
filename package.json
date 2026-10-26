@@ -1,0 +1,61 @@
+{
+  "name": "nagorik-pg",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nagorik PG - civic issue reporting and MP-office accountability platform for Panchagarh.",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed-reference.ts",
+    "db:setup": "npm run db:migrate && npm run db:seed",
+    "db:seed:demo": "tsx scripts/seed-demo-data.ts",
+    "admin:create": "node --conditions=react-server --import tsx scripts/create-admin.ts",
+    "admin:reset-password": "node --conditions=react-server --import tsx scripts/reset-password.ts",
+    "check": "npm run lint && npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.44.0",
+    "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3",
+    "lucide-react": "^0.475.0",
+    "next": "14.2.35",
+    "nodemailer": "^6.10.0",
+    "pg": "^8.13.0",
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "server-only": "^0.0.1",
+    "sharp": "^0.33.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.22",
+    "@types/leaflet.markercluster": "^1.5.6",
+    "@types/node": "^20.17.19",
+    "@types/nodemailer": "^6.4.17",
+    "@types/pg": "^8.11.10",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "autoprefixer": "^10.4.20",
+    "drizzle-kit": "^0.31.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.35",
+    "playwright-core": "^1.49.0",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

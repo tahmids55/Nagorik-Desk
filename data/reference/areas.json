@@ -1,0 +1,236 @@
+[
+  {
+    "id": "sadar",
+    "kind": "upazila",
+    "parentId": null,
+    "nameEn": "Panchagarh Sadar",
+    "nameBn": "পঞ্চগড় সদর",
+    "lat": 26.3354,
+    "lng": 88.5542
+  },
+  {
+    "id": "atwari",
+    "kind": "upazila",
+    "parentId": null,
+    "nameEn": "Atwari",
+    "nameBn": "আটোয়ারী",
+    "lat": 26.2394,
+    "lng": 88.4081
+  },
+  {
+    "id": "tetulia",
+    "kind": "upazila",
+    "parentId": null,
+    "nameEn": "Tetulia",
+    "nameBn": "তেঁতুলিয়া",
+    "lat": 26.495,
+    "lng": 88.3421
+  },
+  {
+    "id": "amarkhana",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Amarkhana",
+    "nameBn": "অমরখানা",
+    "lat": 26.425,
+    "lng": 88.572
+  },
+  {
+    "id": "chaklahat",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Chaklahat",
+    "nameBn": "চাকলাহাট",
+    "lat": 26.3422,
+    "lng": 88.6825
+  },
+  {
+    "id": "dhakkamara",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Dhakkamara",
+    "nameBn": "ধাক্কামারা",
+    "lat": 26.312,
+    "lng": 88.541
+  },
+  {
+    "id": "garinabari",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Garinabari",
+    "nameBn": "গড়িনাবাড়ী",
+    "lat": 26.32,
+    "lng": 88.575
+  },
+  {
+    "id": "hafizabad-gendukuri",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Hafizabad (Gendukuri)",
+    "nameBn": "হাফিজাবাদ (গেন্দুকুরি)",
+    "lat": 26.385,
+    "lng": 88.525
+  },
+  {
+    "id": "haribhasa",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Haribhasa",
+    "nameBn": "হাড়িভাসা",
+    "lat": 26.375,
+    "lng": 88.641
+  },
+  {
+    "id": "magura",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Magura",
+    "nameBn": "মাগুরা",
+    "lat": 26.315,
+    "lng": 88.485
+  },
+  {
+    "id": "kamat-kajoldighi",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Kamat Kajoldighi",
+    "nameBn": "কামাত কাজলদিঘী",
+    "lat": 26.278,
+    "lng": 88.512
+  },
+  {
+    "id": "panchagarh-sadar-union",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Panchagarh Sadar Union",
+    "nameBn": "পঞ্চগড় সদর ইউনিয়ন",
+    "lat": 26.352,
+    "lng": 88.568
+  },
+  {
+    "id": "satmera",
+    "kind": "union",
+    "parentId": "sadar",
+    "nameEn": "Satmera",
+    "nameBn": "সাতমেরা",
+    "lat": 26.442,
+    "lng": 88.538
+  },
+  {
+    "id": "alowakhowa",
+    "kind": "union",
+    "parentId": "atwari",
+    "nameEn": "Alowakhowa",
+    "nameBn": "আলোয়াখোয়া",
+    "lat": 26.2075,
+    "lng": 88.3644
+  },
+  {
+    "id": "balarampur",
+    "kind": "union",
+    "parentId": "atwari",
+    "nameEn": "Balarampur",
+    "nameBn": "বলরামপুর",
+    "lat": 26.218,
+    "lng": 88.398
+  },
+  {
+    "id": "dhamor",
+    "kind": "union",
+    "parentId": "atwari",
+    "nameEn": "Dhamor",
+    "nameBn": "ধামোর",
+    "lat": 26.3009,
+    "lng": 88.4318
+  },
+  {
+    "id": "mirzapur",
+    "kind": "union",
+    "parentId": "atwari",
+    "nameEn": "Mirzapur",
+    "nameBn": "মির্জাপুর",
+    "lat": 26.2607,
+    "lng": 88.45
+  },
+  {
+    "id": "radhanagar",
+    "kind": "union",
+    "parentId": "atwari",
+    "nameEn": "Radhanagar",
+    "nameBn": "রাধানগর",
+    "lat": 26.2185,
+    "lng": 88.433
+  },
+  {
+    "id": "toria",
+    "kind": "union",
+    "parentId": "atwari",
+    "nameEn": "Toria",
+    "nameBn": "তোড়িয়া",
+    "lat": 26.225,
+    "lng": 88.472
+  },
+  {
+    "id": "banglabandha",
+    "kind": "union",
+    "parentId": "tetulia",
+    "nameEn": "Banglabandha",
+    "nameBn": "বাংলাবান্ধা",
+    "lat": 26.621,
+    "lng": 88.412
+  },
+  {
+    "id": "bhajanpur",
+    "kind": "union",
+    "parentId": "tetulia",
+    "nameEn": "Bhajanpur",
+    "nameBn": "ভজনপুর",
+    "lat": 26.4696,
+    "lng": 88.4824
+  },
+  {
+    "id": "buraburi",
+    "kind": "union",
+    "parentId": "tetulia",
+    "nameEn": "Buraburi",
+    "nameBn": "বুড়াবুড়ি",
+    "lat": 26.541,
+    "lng": 88.388
+  },
+  {
+    "id": "debnagar",
+    "kind": "union",
+    "parentId": "tetulia",
+    "nameEn": "Debnagar",
+    "nameBn": "দেবনগর",
+    "lat": 26.478,
+    "lng": 88.455
+  },
+  {
+    "id": "salbahan",
+    "kind": "union",
+    "parentId": "tetulia",
+    "nameEn": "Salbahan",
+    "nameBn": "শালবাহান",
+    "lat": 26.525,
+    "lng": 88.441
+  },
+  {
+    "id": "tetulia-sadar",
+    "kind": "union",
+    "parentId": "tetulia",
+    "nameEn": "Tetulia Sadar",
+    "nameBn": "তেঁতুলিয়া সদর",
+    "lat": 26.498,
+    "lng": 88.345
+  },
+  {
+    "id": "tirnaihat",
+    "kind": "union",
+    "parentId": "tetulia",
+    "nameEn": "Tirnaihat",
+    "nameBn": "তিরনইহাট",
+    "lat": 26.5674,
+    "lng": 88.384
+  }
+]
