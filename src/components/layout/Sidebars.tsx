@@ -113,6 +113,34 @@ export async function SidebarRight() {
           ))}
         </ol>
       </section>
+
+      {/* Facebook-style sticky sidebar footer */}
+      <footer className="px-1 pt-1 text-[12px] text-muted space-y-1.5" aria-label={t("footer_links")}>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <Link href="/about" className="hover:text-ink hover:underline">
+            {t("about")}
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link href="/terms" className="hover:text-ink hover:underline">
+            {t("terms")}
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link href="/privacy" className="hover:text-ink hover:underline">
+            {t("privacy")}
+          </Link>
+        </div>
+        <p className="text-[11px] text-muted leading-tight">
+          © {new Date().getFullYear()} Nagorik Desk · Developed by{" "}
+          <a
+            href="https://xerophytelabs.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ink font-medium hover:underline"
+          >
+            xerophytelabs
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }

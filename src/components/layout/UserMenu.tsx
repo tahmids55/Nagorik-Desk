@@ -74,6 +74,20 @@ export function UserMenu({ id, name, avatarMediaId, role }: { id: string; name: 
           <LangToggle variant="row" />
           <ThemeToggle variant="row" />
           <hr className="my-1 border-line" />
+          <div className="flex flex-wrap items-center gap-x-2 px-3 py-1.5 text-xs text-muted">
+            <Link href="/about" className="hover:text-ink hover:underline" onClick={() => setOpen(false)}>
+              {t("about")}
+            </Link>
+            <span aria-hidden="true">·</span>
+            <Link href="/terms" className="hover:text-ink hover:underline" onClick={() => setOpen(false)}>
+              {t("terms")}
+            </Link>
+            <span aria-hidden="true">·</span>
+            <Link href="/privacy" className="hover:text-ink hover:underline" onClick={() => setOpen(false)}>
+              {t("privacy")}
+            </Link>
+          </div>
+          <hr className="my-1 border-line" />
           <form action={logout}>
             <button type="submit" className={item}>
               <LogOut className="h-[18px] w-[18px]" aria-hidden="true" />
