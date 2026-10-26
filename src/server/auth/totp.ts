@@ -67,7 +67,7 @@ export function verifyTotp(secret: string, code: string, atMs = Date.now(), step
   return null;
 }
 
-export function otpauthUrl(secret: string, account: string, issuer = "Nagorik PG"): string {
+export function otpauthUrl(secret: string, account: string, issuer = "Nagorik Desk"): string {
   const label = encodeURIComponent(`${issuer}:${account}`);
   return `otpauth://totp/${label}?secret=${secret}&issuer=${encodeURIComponent(issuer)}&algorithm=SHA1&digits=6&period=30`;
 }

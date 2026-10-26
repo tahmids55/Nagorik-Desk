@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Nagorik PG",
-    short_name: "Nagorik",
+    name: "Nagorik Desk",
+    short_name: "Nagorik Desk",
     description: "Report local problems in Panchagarh-1 and follow the fix.",
     start_url: "/",
     display: "standalone",

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Logo({ withText = true }: { withText?: boolean }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5" aria-label="Nagorik PG">
+    <Link href="/" className="flex items-center gap-2.5" aria-label="Nagorik Desk">
       <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
         <rect width="34" height="34" rx="3" fill="var(--brand)" />
         <path
@@ -13,7 +13,7 @@ export function Logo({ withText = true }: { withText?: boolean }) {
       </svg>
       {withText && (
         <span className="text-[17px] font-semibold tracking-tight">
-          Nagorik <span className="text-brand">PG</span>
+          Nagorik <span className="text-brand">Desk</span>
         </span>
       )}
     </Link>

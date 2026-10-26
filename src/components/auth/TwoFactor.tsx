@@ -36,10 +36,10 @@ export function TwoFactorSetup({ qrSvg, secret, next }: { qrSvg: string; secret:
     const codes = state.data!.recoveryCodes;
     const text = codes.join("\n");
     const download = () => {
-      const url = URL.createObjectURL(new Blob([`Nagorik PG recovery codes\n\n${text}\n`], { type: "text/plain" }));
+      const url = URL.createObjectURL(new Blob([`Nagorik Desk recovery codes\n\n${text}\n`], { type: "text/plain" }));
       const a = document.createElement("a");
       a.href = url;
-      a.download = "nagorik-pg-recovery-codes.txt";
+      a.download = "nagorik-desk-recovery-codes.txt";
       a.click();
       URL.revokeObjectURL(url);
     };

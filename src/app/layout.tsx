@@ -27,10 +27,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getT();
   return {
     metadataBase: new URL(process.env.APP_URL ?? "http://localhost:3000"),
-    title: { default: `Nagorik PG - ${t("meta_title")}`, template: "%s · Nagorik PG" },
+    title: { default: `Nagorik Desk - ${t("meta_title")}`, template: "%s · Nagorik Desk" },
     description: t("meta_description"),
-    applicationName: "Nagorik PG",
-    openGraph: { type: "website", siteName: "Nagorik PG", title: `Nagorik PG - ${t("meta_title")}`, description: t("meta_description") },
+    applicationName: "Nagorik Desk",
+    openGraph: { type: "website", siteName: "Nagorik Desk", title: `Nagorik Desk - ${t("meta_title")}`, description: t("meta_description") },
   };
 }
 

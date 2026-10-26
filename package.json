@@ -1,8 +1,8 @@
 {
-  "name": "nagorik-pg",
+  "name": "nagorik-desk",
   "version": "1.0.0",
   "private": true,
-  "description": "Nagorik PG - civic issue reporting and MP-office accountability platform for Panchagarh.",
+  "description": "Nagorik Desk - civic issue reporting and MP-office accountability platform for Panchagarh.",
   "engines": {
     "node": ">=18.18.0"
   },

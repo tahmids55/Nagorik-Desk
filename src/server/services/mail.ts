@@ -12,7 +12,7 @@ export async function sendMail(input: { to: string; subject: string; text: strin
   transporter ??= nodemailer.createTransport(e.SMTP_URL!);
   try {
     await transporter.sendMail({
-      from: e.SMTP_FROM ?? "Nagorik PG <no-reply@localhost>",
+      from: e.SMTP_FROM ?? "Nagorik Desk <no-reply@localhost>",
       to: input.to,
       subject: input.subject,
       text: input.text,

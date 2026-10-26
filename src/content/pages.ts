@@ -10,8 +10,8 @@ export type Page = { title: string; intro?: string; draft?: boolean; sections: S
 export const PAGES: Record<"about" | "terms" | "privacy", Record<Lang, Page>> = {
   about: {
     en: {
-      title: "About Nagorik PG",
-      intro: "Nagorik PG is a public place where people of Panchagarh-1 report local problems, support each other's reports, and hold the responsible offices to account.",
+      title: "About Nagorik Desk",
+      intro: "Nagorik Desk is a public place where people of Panchagarh-1 report local problems, support each other's reports, and hold the responsible offices to account.",
       sections: [
         {
           title: "How it works",
@@ -39,8 +39,8 @@ export const PAGES: Record<"about" | "terms" | "privacy", Record<Lang, Page>> = 
       ],
     },
     bn: {
-      title: "নাগরিক পিজি সম্পর্কে",
-      intro: "নাগরিক পিজি এমন একটি উন্মুক্ত প্ল্যাটফর্ম, যেখানে পঞ্চগড়-১ এর মানুষ এলাকার সমস্যা জানান, একে অপরের অভিযোগে সমর্থন দেন এবং দায়িত্বপ্রাপ্ত দপ্তরের জবাবদিহি নিশ্চিত করেন।",
+      title: "নাগরিক ডেস্ক সম্পর্কে",
+      intro: "নাগরিক ডেস্ক এমন একটি উন্মুক্ত প্ল্যাটফর্ম, যেখানে পঞ্চগড়-১ এর মানুষ এলাকার সমস্যা জানান, একে অপরের অভিযোগে সমর্থন দেন এবং দায়িত্বপ্রাপ্ত দপ্তরের জবাবদিহি নিশ্চিত করেন।",
       sections: [
         {
           title: "কীভাবে কাজ করে",
@@ -77,7 +77,7 @@ export const PAGES: Record<"about" | "terms" | "privacy", Record<Lang, Page>> = 
         { title: "Your account", body: ["You must give your real name and a working email address. One person, one account. Keep your password private. You are responsible for what is posted from your account."] },
         { title: "What you may post", body: ["Post real local problems that a public office can act on. Describe the problem, not a person. Do not post other people's private information, hate, threats, spam, or anything false. Posts that break these rules may be hidden by moderators and accounts may be suspended."] },
         { title: "Voting", body: ["You may support or oppose a report once. Do not create several accounts, buy or sell votes, or organise fake support. Suspicious voting may be removed."] },
-        { title: "Official responses", body: ["Assignments, deadlines and replies from the MP office and government offices are public. They are statements of those offices, not of Nagorik PG."] },
+        { title: "Official responses", body: ["Assignments, deadlines and replies from the MP office and government offices are public. They are statements of those offices, not of Nagorik Desk."] },
         { title: "Emergencies", body: ["This site is not monitored for emergencies. Call 999."] },
         { title: "Changes", body: ["We may update these terms. If the changes are important, we will ask you to accept them again."] },
       ],
@@ -90,7 +90,7 @@ export const PAGES: Record<"about" | "terms" | "privacy", Record<Lang, Page>> = 
         { title: "আপনার অ্যাকাউন্ট", body: ["আপনার প্রকৃত নাম ও সচল ইমেইল ঠিকানা দিতে হবে। এক ব্যক্তি, এক অ্যাকাউন্ট। পাসওয়ার্ড গোপন রাখুন। আপনার অ্যাকাউন্ট থেকে যা পোস্ট হয় তার দায় আপনার।"] },
         { title: "যা পোস্ট করতে পারবেন", body: ["সরকারি দপ্তর যেসব স্থানীয় সমস্যার সমাধান করতে পারে, সেগুলো জানান। সমস্যার বর্ণনা দিন, কোনো ব্যক্তির নয়। অন্যের ব্যক্তিগত তথ্য, ঘৃণা, হুমকি, স্প্যাম বা মিথ্যা তথ্য দেবেন না। নিয়ম ভাঙলে পোস্ট লুকানো এবং অ্যাকাউন্ট স্থগিত করা হতে পারে।"] },
         { title: "ভোট", body: ["একটি অভিযোগে আপনি একবারই সমর্থন বা বিরোধিতা করতে পারবেন। একাধিক অ্যাকাউন্ট খোলা, ভোট কেনাবেচা বা ভুয়া সমর্থন সংগঠিত করা যাবে না। সন্দেহজনক ভোট বাদ দেওয়া হতে পারে।"] },
-        { title: "সরকারি জবাব", body: ["সংসদ সদস্যের কার্যালয় ও সরকারি দপ্তরের দায়িত্ব বণ্টন, সময়সীমা ও জবাব প্রকাশ্য। এগুলো ওই দপ্তরগুলোর বক্তব্য, নাগরিক পিজি-র নয়।"] },
+        { title: "সরকারি জবাব", body: ["সংসদ সদস্যের কার্যালয় ও সরকারি দপ্তরের দায়িত্ব বণ্টন, সময়সীমা ও জবাব প্রকাশ্য। এগুলো ওই দপ্তরগুলোর বক্তব্য, নাগরিক ডেস্ক-এর নয়।"] },
         { title: "জরুরি অবস্থা", body: ["এই সাইট জরুরি সেবার জন্য নজরে রাখা হয় না। ৯৯৯ নম্বরে কল করুন।"] },
         { title: "পরিবর্তন", body: ["আমরা শর্তাবলি হালনাগাদ করতে পারি। গুরুত্বপূর্ণ পরিবর্তন হলে আপনাকে আবার সম্মতি দিতে বলা হবে।"] },
       ],
