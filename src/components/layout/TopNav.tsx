@@ -16,14 +16,14 @@ export async function TopNav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-surface">
-      <div className="mx-auto grid h-14 max-w-[1280px] grid-cols-[auto_1fr_auto] items-center gap-3 px-3 sm:px-4 md:grid-cols-[1fr_auto_1fr]">
-        <div className="flex items-center">
+      <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-2 px-3 sm:px-4">
+        <div className="flex shrink-0 items-center">
           <Logo />
         </div>
-        <div className="h-full justify-self-center">
+        <div className="hidden h-full md:flex justify-self-center">
           <NavTabs />
         </div>
-        <div className="flex items-center justify-end gap-1.5">
+        <div className="flex items-center justify-end gap-1 sm:gap-1.5">
           {session ? (
             <>
               <Link href="/new" className="btn-primary btn-sm hidden md:inline-flex">

@@ -173,7 +173,7 @@ export function NotificationBell({ initialUnread = 0 }: { initialUnread?: number
         <div
           role="dialog"
           aria-label={t("notifications")}
-          className="absolute right-0 top-full mt-2 w-[340px] sm:w-[390px] z-50 rounded-[4px] border border-line bg-surface shadow-popover overflow-hidden animate-in fade-in zoom-in-95 duration-100"
+          className="fixed inset-x-2 top-14 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full mt-1 sm:mt-2 w-auto sm:w-[390px] max-w-[calc(100vw-1rem)] z-50 rounded-[4px] border border-line bg-surface shadow-popover overflow-hidden animate-in fade-in zoom-in-95 duration-100"
         >
           {/* Popover Header */}
           <div className="flex items-center justify-between border-b border-line px-4 py-3 bg-surface">

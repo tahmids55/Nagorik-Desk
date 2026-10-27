@@ -94,7 +94,7 @@ export async function createIssue(_prev: FormState, formData: FormData): Promise
           lng,
           precise,
           landmark: d.landmark,
-          isUrgent: d.isUrgent,
+          isUrgent: false,
           anonymous: d.anonymous,
         })
         .returning({ id: issues.id });
@@ -178,6 +178,7 @@ export async function castVote(issueId: string, value: 1 | -1): Promise<ActionRe
         upvotes: sql`(select count(*) from ${votes} where ${votes.issueId} = ${issueId} and ${votes.value} = 1)`,
         downvotes: sql`(select count(*) from ${votes} where ${votes.issueId} = ${issueId} and ${votes.value} = -1)`,
         score: sql`(select coalesce(sum(${votes.value}), 0) from ${votes} where ${votes.issueId} = ${issueId})`,
+        isUrgent: sql`case when (select count(*) from ${votes} where ${votes.issueId} = ${issueId} and ${votes.value} = 1) >= 10 then true else ${issues.isUrgent} end`,
       })
       .where(eq(issues.id, issueId))
       .returning({ upvotes: issues.upvotes, downvotes: issues.downvotes, score: issues.score });

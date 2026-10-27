@@ -77,7 +77,7 @@ export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; s
           {item.mpTargetDate && <span className="font-normal text-muted">· {t("target_date", { date: item.mpTargetDate })}</span>}
         </div>
       )}
-      <div className="p-4 pb-3">
+      <div className="p-3 sm:p-4 pb-2 sm:pb-3">
         <header className="flex items-start gap-3">
           {item.author.id ? (
             <Link href={`/u/${item.author.id}`} aria-label={authorName}>
@@ -186,7 +186,7 @@ export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; s
         </div>
       )}
 
-      <footer className="mt-3 flex items-center gap-1 border-t border-line px-3 py-2">
+      <footer className="mt-3 flex items-center gap-1 border-t border-line px-2 sm:px-3 py-2">
         <VoteBar
           size={detail ? "lg" : "md"}
           issueId={item.id}

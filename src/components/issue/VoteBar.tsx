@@ -77,11 +77,11 @@ export function VoteBar({ issueId, score, upvotes, downvotes, myVote, isMine, si
           onClick={() => vote(1)}
           aria-pressed={state.myVote === 1}
           aria-label={t("upvote")}
-          className={cn("flex h-8 w-8 items-center justify-center rounded-[3px] transition-colors hover:bg-brand/15", state.myVote === 1 ? "text-brand" : "text-muted", big && "h-10 w-10")}
+          className={cn("flex h-8 w-8 items-center justify-center rounded-[3px] transition-colors hover:bg-brand/15 active:scale-95", state.myVote === 1 ? "text-brand" : "text-muted", big && "h-10 w-10")}
         >
           <ArrowBigUp className={iconCls} fill={state.myVote === 1 ? "currentColor" : "none"} aria-hidden="true" />
         </button>
-        <span className={cn("min-w-[2ch] text-center font-semibold tabular-nums", big ? "px-1 text-lg" : "text-sm", state.myVote === 1 && "text-brand", state.myVote === -1 && "text-danger")} aria-live="polite">
+        <span className={cn("min-w-[2ch] text-center font-semibold tabular-nums px-0.5", big ? "px-1 text-lg" : "text-sm", state.myVote === 1 && "text-brand", state.myVote === -1 && "text-danger")} aria-live="polite">
           {formatNumber(state.score, lang)}
         </span>
         <button
@@ -89,7 +89,7 @@ export function VoteBar({ issueId, score, upvotes, downvotes, myVote, isMine, si
           onClick={() => vote(-1)}
           aria-pressed={state.myVote === -1}
           aria-label={t("downvote")}
-          className={cn("flex h-8 w-8 items-center justify-center rounded-[3px] transition-colors hover:bg-danger/15", state.myVote === -1 ? "text-danger" : "text-muted", big && "h-10 w-10")}
+          className={cn("flex h-8 w-8 items-center justify-center rounded-[3px] transition-colors hover:bg-danger/15 active:scale-95", state.myVote === -1 ? "text-danger" : "text-muted", big && "h-10 w-10")}
         >
           <ArrowBigDown className={iconCls} fill={state.myVote === -1 ? "currentColor" : "none"} aria-hidden="true" />
         </button>

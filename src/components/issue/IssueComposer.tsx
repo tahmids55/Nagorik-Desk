@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, EyeOff, Flame } from "lucide-react";
+import { AlertTriangle, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useFormState } from "react-dom";
@@ -170,16 +170,6 @@ export function IssueComposer({ apiKey, mapId, categories, areas, defaultUpazila
       )}
 
       <section className="border-t border-line pt-4 space-y-3">
-        <label className="flex cursor-pointer items-start gap-3 text-sm">
-          <input type="checkbox" name="isUrgent" className="mt-1 h-4 w-4 accent-brand" />
-          <span>
-            <span className="flex items-center gap-1.5 font-semibold">
-              <Flame className="h-4 w-4 text-danger" aria-hidden="true" />
-              {t("composer_urgent")}
-            </span>
-            <span className="block text-xs text-muted">{t("composer_urgent_hint")}</span>
-          </span>
-        </label>
         <label className="flex cursor-pointer items-start gap-3 text-sm">
           <input type="checkbox" name="anonymous" className="mt-1 h-4 w-4 accent-brand" />
           <span>

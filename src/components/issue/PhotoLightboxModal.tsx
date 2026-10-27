@@ -202,7 +202,7 @@ export function PhotoLightboxModal({
       >
         {/* ───────────── LEFT SIDE: Photo Viewer & Slider ───────────── */}
         <section
-          className="relative flex flex-1 flex-col items-center justify-center bg-[#07090F] min-h-[300px] max-h-[50vh] lg:max-h-full select-none overflow-hidden"
+          className="relative flex flex-1 flex-col items-center justify-center bg-[#07090F] h-[40vh] min-h-[250px] max-h-[45vh] lg:h-auto lg:min-h-0 lg:max-h-full select-none overflow-hidden"
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
           aria-label={t("photo_of", { title: item.title })}
@@ -297,7 +297,7 @@ export function PhotoLightboxModal({
           aria-label={t("post_details")}
         >
           {/* Scrollable Container for Post Content & Comments Thread */}
-          <div className="flex-1 overflow-y-auto scroll-thin p-4 sm:p-5 space-y-4">
+          <div className="flex-1 overflow-y-auto scroll-thin p-3.5 sm:p-5 space-y-4 overscroll-contain">
             {/* Header: Author, Date, Status */}
             <header className="flex items-start gap-3">
               {item.author.id ? (

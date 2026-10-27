@@ -64,7 +64,10 @@ export const issueSchema = z.object({
     .string()
     .optional()
     .transform((s) => (s ?? "").replace(/\s+/g, " ").trim().slice(0, LIMITS.landmarkMax) || null),
-  isUrgent: z.string().optional().transform((v) => v === "on"),
+  isUrgent: z
+    .string()
+    .optional()
+    .transform(() => false),
   anonymous: z.string().optional().transform((v) => v === "on"),
   mediaIds: z
     .string()

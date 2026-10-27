@@ -133,7 +133,7 @@ async function hydrate(rows: Row[], viewer: Viewer): Promise<IssueCardDTO[]> {
       lng: i.lng,
       precise: i.precise,
       landmark: i.landmark,
-      isUrgent: i.isUrgent,
+      isUrgent: i.isUrgent || i.upvotes >= 10,
       status: i.status as IssueCardDTO["status"],
       stakeholder: stakeholder ? { id: stakeholder.id, nameEn: stakeholder.nameEn, nameBn: stakeholder.nameBn } : null,
       dueAt: i.dueAt?.toISOString() ?? null,
@@ -305,7 +305,7 @@ export async function getMapPins(f: Pick<FeedFilters, "category" | "status" | "a
     categoryId: r.categoryId,
     upazilaId: r.upazilaId,
     score: r.score,
-    isUrgent: r.isUrgent,
+    isUrgent: r.isUrgent || r.score >= 10,
     overdue: !!r.dueAt && r.dueAt.getTime() < now && (r.status === "assigned" || r.status === "in_progress"),
     createdAt: r.createdAt.toISOString(),
   }));
