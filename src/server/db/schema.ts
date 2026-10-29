@@ -290,6 +290,21 @@ export const votes = app.table(
   ],
 );
 
+/** Issues a signed-in user has saved to read later. Private to the owner. */
+export const bookmarks = app.table(
+  "bookmarks",
+  {
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    issueId: uuid("issue_id")
+      .notNull()
+      .references(() => issues.id, { onDelete: "cascade" }),
+    createdAt: ts("created_at").notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.issueId] }), index("bookmarks_user_created_idx").on(t.userId, t.createdAt)],
+);
+
 export const comments = app.table(
   "comments",
   {

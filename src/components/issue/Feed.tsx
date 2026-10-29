@@ -8,7 +8,7 @@ import { loadMoreIssues } from "@/server/actions/feed";
 import type { FeedItem } from "@/server/queries/feed";
 import { PostCard } from "./PostCard";
 
-type Query = { q?: string; area?: string; category?: string; status?: "open" | "progress" | "resolved" | "rejected" | "overdue"; sort?: Sort; authorId?: string; votedBy?: string };
+type Query = { q?: string; area?: string; category?: string; status?: "open" | "progress" | "resolved" | "rejected" | "overdue"; urgent?: boolean; sort?: Sort; authorId?: string; votedBy?: string };
 
 /** Server-rendered first page, then "Show more" appends further pages. */
 export function Feed({ initial, hasMore: initialHasMore, query, signedIn }: { initial: FeedItem[]; hasMore: boolean; query: Query; signedIn: boolean }) {

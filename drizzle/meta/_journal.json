@@ -15,6 +15,20 @@
       "when": 1793049012066,
       "tag": "0001_boring_slayback",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793250102029,
+      "tag": "0002_easy_the_renegades",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793250286817,
+      "tag": "0003_sync_urgent_from_upvotes",
+      "breakpoints": true
     }
   ]
 }

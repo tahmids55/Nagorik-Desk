@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Building2, Flame, MapPin, MessageCircle, Share2, Star, EyeOff } from "lucide-react";
+import { AlertTriangle, Building2, Flame, MapPin, MessageCircle, Star, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Avatar } from "@/components/ui/Avatar";
@@ -13,12 +13,13 @@ import { daysUntil } from "@/lib/format";
 import type { FeedItem } from "@/server/queries/feed";
 import { ImageGrid } from "./ImageGrid";
 import { PhotoLightboxModal } from "./PhotoLightboxModal";
+import { BookmarkButton } from "./BookmarkButton";
 import { PostMenu } from "./PostMenu";
+import { ShareMenu } from "./ShareMenu";
 import { VoteBar } from "./VoteBar";
 
 export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; signedIn: boolean; detail?: boolean }) {
   const { t, tn, lang } = useI18n();
-  const [copied, setCopied] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
@@ -51,20 +52,6 @@ export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; s
   const href = `/issues/${item.id}`;
   const active = item.status === "assigned" || item.status === "in_progress";
   const days = item.dueAt ? daysUntil(item.dueAt) : null;
-
-  const share = async () => {
-    const url = `${window.location.origin}${href}`;
-    try {
-      if (navigator.share) await navigator.share({ title: item.title, url });
-      else {
-        await navigator.clipboard.writeText(url);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }
-    } catch {
-      /* user cancelled */
-    }
-  };
 
   const authorName = item.author.anonymous && !item.author.id ? t("anonymous_citizen") : item.author.name;
 
@@ -186,7 +173,7 @@ export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; s
         </div>
       )}
 
-      <footer className="mt-3 flex items-center gap-1 border-t border-line px-2 sm:px-3 py-2">
+      <footer className="mt-3 flex flex-wrap items-center gap-x-1 gap-y-1 border-t border-line px-2 sm:px-3 py-2">
         <VoteBar
           size={detail ? "lg" : "md"}
           issueId={item.id}
@@ -201,10 +188,10 @@ export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; s
           <MessageCircle className="h-[18px] w-[18px]" aria-hidden="true" />
           <span>{formatNumber(item.commentCount, lang)}</span>
         </Link>
-        <button type="button" onClick={share} className="btn-ghost btn-sm rounded-[3px]" aria-label={t("share")}>
-          <Share2 className="h-[18px] w-[18px]" aria-hidden="true" />
-          <span className="hidden sm:inline">{copied ? t("link_copied") : t("share")}</span>
-        </button>
+        <ShareMenu path={href} title={item.title} />
+        <span className="ml-auto">
+          <BookmarkButton issueId={item.id} initialSaved={item.saved} signedIn={signedIn} />
+        </span>
       </footer>
 
       {lightboxIndex !== null && (

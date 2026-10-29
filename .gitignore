@@ -10,3 +10,7 @@ coverage
 .DS_Store
 playwright-report
 test-results
+drizzle/0002_easy_the_renegades.sql
+drizzle/0003_sync_urgent_from_upvotes.sql
+drizzle/meta/_journal.json
+drizzle/meta/_journal.json

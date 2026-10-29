@@ -1,12 +1,13 @@
 "use client";
 
-import { ArrowBigDown, ArrowBigUp } from "lucide-react";
+import { ArrowBigDown, ArrowBigUp, Flame } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import { useErrorText } from "@/components/ui/forms";
 import { useI18n } from "@/i18n/client";
 import { formatNumber } from "@/i18n/translate";
 import { cn } from "@/lib/cn";
+import { URGENT_UPVOTES } from "@/lib/constants";
 import type { VoteValue } from "@/lib/types";
 import { castVote } from "@/server/actions/issues";
 
@@ -63,6 +64,10 @@ export function VoteBar({ issueId, score, upvotes, downvotes, myVote, isMine, si
   };
 
   const big = size === "lg";
+  const reached = state.upvotes >= URGENT_UPVOTES;
+  const remaining = Math.max(0, URGENT_UPVOTES - state.upvotes);
+  const progress = Math.min(100, Math.round((state.upvotes / URGENT_UPVOTES) * 100));
+  const meterText = reached ? t("urgent_reached") : t("urgent_progress", { n: formatNumber(remaining, lang) });
   const iconCls = big ? "h-7 w-7" : "h-[22px] w-[22px]";
   return (
     <div className="flex items-center gap-2">
@@ -93,6 +98,23 @@ export function VoteBar({ issueId, score, upvotes, downvotes, myVote, isMine, si
         >
           <ArrowBigDown className={iconCls} fill={state.myVote === -1 ? "currentColor" : "none"} aria-hidden="true" />
         </button>
+      </div>
+      <div className="flex min-w-0 items-center gap-1.5" title={meterText}>
+        {reached ? (
+          <Flame className="h-4 w-4 shrink-0 text-danger" aria-hidden="true" />
+        ) : (
+          <span
+            role="progressbar"
+            aria-label={meterText}
+            aria-valuemin={0}
+            aria-valuemax={URGENT_UPVOTES}
+            aria-valuenow={state.upvotes}
+            className="block h-1 w-8 shrink-0 overflow-hidden rounded-[2px] bg-neutral-fill sm:w-12"
+          >
+            <span className="block h-full bg-danger/70 transition-[width] duration-200" style={{ width: `${progress}%` }} />
+          </span>
+        )}
+        <span className={cn("hidden truncate text-[11px] sm:inline", reached ? "font-medium text-danger" : "text-muted", big && "!inline")}>{meterText}</span>
       </div>
       {error && (
         <span role="alert" className="text-xs text-danger">

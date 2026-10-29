@@ -1,8 +1,9 @@
 import "server-only";
 import { and, asc, desc, eq, gte, ilike, inArray, isNull, lte, or, sql, type SQL } from "drizzle-orm";
 import { db } from "../db/client";
+import { getSavedIssueIds } from "./bookmarks";
 import { comments, issueMedia, issueUpdates, issues, media, stakeholders, updateMedia, users, votes } from "../db/schema";
-import { LIMITS, type Role, type Sort } from "@/lib/constants";
+import { LIMITS, URGENT_UPVOTES, type Role, type Sort } from "@/lib/constants";
 import { boxAround, haversineMeters } from "@/lib/geo/geo";
 import type { CommentDTO, IssueCardDTO, MapPinDTO, TimelineEntryDTO, VoteValue } from "@/lib/types";
 
@@ -13,6 +14,8 @@ export type FeedFilters = {
   area?: string;
   category?: string;
   status?: StatusFilter;
+  /** Only issues the community marked urgent (10+ upvotes) */
+  urgent?: boolean;
   sort?: Sort;
   page?: number;
   authorId?: string;
@@ -54,6 +57,7 @@ function whereFor(f: FeedFilters, viewer: Viewer): SQL | undefined {
   if (f.area) c.push(or(eq(issues.upazilaId, f.area), eq(issues.unionId, f.area)));
   if (f.category) c.push(eq(issues.categoryId, f.category));
   if (f.status) c.push(statusClause(f.status));
+  if (f.urgent) c.push(gte(issues.upvotes, URGENT_UPVOTES));
   if (f.stakeholderId) c.push(eq(issues.stakeholderId, f.stakeholderId));
   if (f.votedBy && viewer?.id === f.votedBy) {
     c.push(sql`exists (select 1 from ${votes} v where v.issue_id = ${issues.id} and v.user_id = ${f.votedBy} and v.value = 1)`);
@@ -98,7 +102,7 @@ async function hydrate(rows: Row[], viewer: Viewer): Promise<IssueCardDTO[]> {
   if (rows.length === 0) return [];
   const ids = rows.map((r) => r.issue.id);
 
-  const [imgRows, voteRows] = await Promise.all([
+  const [imgRows, voteRows, savedIds] = await Promise.all([
     db()
       .select({ issueId: issueMedia.issueId, mediaId: issueMedia.mediaId })
       .from(issueMedia)
@@ -110,6 +114,7 @@ async function hydrate(rows: Row[], viewer: Viewer): Promise<IssueCardDTO[]> {
           .from(votes)
           .where(and(eq(votes.userId, viewer.id), inArray(votes.issueId, ids)))
       : Promise.resolve([] as { issueId: string; value: number }[]),
+    viewer ? getSavedIssueIds(viewer.id, ids) : Promise.resolve(new Set<string>()),
   ]);
 
   const imgs = new Map<string, string[]>();
@@ -133,7 +138,7 @@ async function hydrate(rows: Row[], viewer: Viewer): Promise<IssueCardDTO[]> {
       lng: i.lng,
       precise: i.precise,
       landmark: i.landmark,
-      isUrgent: i.isUrgent || i.upvotes >= 10,
+      isUrgent: i.upvotes >= URGENT_UPVOTES,
       status: i.status as IssueCardDTO["status"],
       stakeholder: stakeholder ? { id: stakeholder.id, nameEn: stakeholder.nameEn, nameBn: stakeholder.nameBn } : null,
       dueAt: i.dueAt?.toISOString() ?? null,
@@ -157,6 +162,7 @@ async function hydrate(rows: Row[], viewer: Viewer): Promise<IssueCardDTO[]> {
       },
       isMine: mine,
       myVote: myVotes.get(i.id) ?? 0,
+      saved: savedIds.has(i.id),
       images: imgs.get(i.id) ?? [],
       hidden: i.hiddenAt !== null,
     };
@@ -274,6 +280,7 @@ export async function getMapPins(f: Pick<FeedFilters, "category" | "status" | "a
       categoryId: issues.categoryId,
       upazilaId: issues.upazilaId,
       score: issues.score,
+      upvotes: issues.upvotes,
       isUrgent: issues.isUrgent,
       dueAt: issues.dueAt,
       createdAt: issues.createdAt,
@@ -305,7 +312,7 @@ export async function getMapPins(f: Pick<FeedFilters, "category" | "status" | "a
     categoryId: r.categoryId,
     upazilaId: r.upazilaId,
     score: r.score,
-    isUrgent: r.isUrgent || r.score >= 10,
+    isUrgent: r.upvotes >= URGENT_UPVOTES,
     overdue: !!r.dueAt && r.dueAt.getTime() < now && (r.status === "assigned" || r.status === "in_progress"),
     createdAt: r.createdAt.toISOString(),
   }));

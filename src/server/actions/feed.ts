@@ -12,6 +12,7 @@ const schema = z.object({
   area: z.string().max(60).optional(),
   category: z.string().max(40).optional(),
   status: z.enum(["open", "progress", "resolved", "rejected", "overdue"]).optional(),
+  urgent: z.boolean().optional(),
   sort: z.enum(SORTS).optional(),
   authorId: z.string().uuid().optional(),
   votedBy: z.string().uuid().optional(),

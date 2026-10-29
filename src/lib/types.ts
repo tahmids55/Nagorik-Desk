@@ -33,6 +33,8 @@ export type IssueCardDTO = {
   author: { id: string | null; name: string; avatarMediaId: string | null; role: Role | null; anonymous: boolean };
   isMine: boolean;
   myVote: VoteValue;
+  /** Whether the viewer bookmarked this issue */
+  saved: boolean;
   images: string[];
   hidden: boolean;
 };

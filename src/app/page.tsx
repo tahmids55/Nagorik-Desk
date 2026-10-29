@@ -25,12 +25,13 @@ export default async function HomePage({ searchParams }: { searchParams: SP }) {
     area: areas.some((a) => a.id === one(searchParams.area)) ? one(searchParams.area) : undefined,
     category: categories.some((c) => c.id === one(searchParams.category)) ? one(searchParams.category) : undefined,
     status: (STATUSES as readonly string[]).includes(statusRaw ?? "") ? (statusRaw as (typeof STATUSES)[number]) : undefined,
+    urgent: one(searchParams.urgent) === "1" ? true : undefined,
     sort: (SORTS as readonly string[]).includes(sortRaw ?? "") ? (sortRaw as (typeof SORTS)[number]) : ("hot" as const),
   };
 
   const viewer = session ? { id: session.user.id, role: session.user.role } : null;
   const { items, hasMore } = await loadFeed(query, viewer, lang);
-  const filtered = !!(query.q || query.area || query.category || query.status);
+  const filtered = !!(query.q || query.area || query.category || query.status || query.urgent);
 
   const areaOptions: Option[] = [
     ...areas.filter((a) => a.kind === "upazila").flatMap((up) => [

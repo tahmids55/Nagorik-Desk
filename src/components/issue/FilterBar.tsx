@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Flame, Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { useI18n } from "@/i18n/client";
@@ -42,6 +42,7 @@ export function FilterBar({ areas, categories }: { areas: Option[]; categories: 
 
   const status = params.get("status") ?? "";
   const sort = params.get("sort") ?? "hot";
+  const urgent = params.get("urgent") === "1";
 
   return (
     <div className="rounded-[4px] border border-line bg-surface shadow-none space-y-3 p-3">
@@ -65,6 +66,18 @@ export function FilterBar({ areas, categories }: { areas: Option[]; categories: 
       </form>
 
       <div className="scroll-thin -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-0.5" role="group" aria-label={t("filter_status")}>
+        <button
+          type="button"
+          onClick={() => set({ urgent: urgent ? "" : "1" })}
+          aria-pressed={urgent}
+          className={cn(
+            "inline-flex shrink-0 items-center gap-1 rounded-[3px] border px-3 py-1.5 text-[13px] font-medium transition-colors",
+            urgent ? "border-danger bg-danger text-surface" : "border-danger/40 bg-surface text-danger hover:bg-danger/10"
+          )}
+        >
+          <Flame className="h-3.5 w-3.5" aria-hidden="true" />
+          {t("filter_urgent")}
+        </button>
         {STATUS.map((s) => (
           <button
             key={s.value}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, ChevronDown, LogOut, Settings, Shield, User, Wrench } from "lucide-react";
+import { Bookmark, Briefcase, ChevronDown, LogOut, Settings, Shield, User, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Avatar } from "@/components/ui/Avatar";
@@ -66,6 +66,10 @@ export function UserMenu({ id, name, avatarMediaId, role }: { id: string; name: 
           <Link href={`/u/${id}`} className={item} onClick={() => setOpen(false)}>
             <User className="h-[18px] w-[18px]" aria-hidden="true" />
             {t("my_profile")}
+          </Link>
+          <Link href="/saved" className={item} onClick={() => setOpen(false)}>
+            <Bookmark className="h-[18px] w-[18px]" aria-hidden="true" />
+            {t("nav_saved")}
           </Link>
           <Link href="/settings" className={item} onClick={() => setOpen(false)}>
             <Settings className="h-[18px] w-[18px]" aria-hidden="true" />

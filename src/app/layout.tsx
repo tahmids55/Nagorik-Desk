@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import type { ReactNode } from "react";
+import { BackToTop } from "@/components/layout/BackToTop";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { Footer } from "@/components/layout/Footer";
 import { TopNav } from "@/components/layout/TopNav";
@@ -56,6 +57,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <main id="main">{children}</main>
           <Footer />
           <BottomNav profileHref={session ? `/u/${session.user.id}` : "/login"} />
+          <BackToTop />
         </I18nProvider>
       </body>
     </html>

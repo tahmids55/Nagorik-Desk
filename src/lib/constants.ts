@@ -73,3 +73,6 @@ export const STATUS_ORDER: Record<IssueStatus, number> = {
 
 /** Panchagarh-1 centre, used when no better location is known. */
 export const MAP_CENTER = { lat: 26.39, lng: 88.46 } as const;
+
+/** Community upvotes at which an issue is automatically flagged Urgent. */
+export const URGENT_UPVOTES = 10;

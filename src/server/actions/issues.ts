@@ -17,7 +17,7 @@ import { getSession } from "../auth/session";
 
 import { fail, ok, type ActionResult } from "@/lib/action";
 import type { CommentDTO } from "@/lib/types";
-import { REOPEN_WINDOW_DAYS } from "@/lib/constants";
+import { REOPEN_WINDOW_DAYS, URGENT_UPVOTES } from "@/lib/constants";
 import { insideConstituency } from "@/lib/geo/boundary";
 import { detectUpazila, nearestArea } from "@/lib/geo/areas";
 import { addWorkingDays } from "@/lib/working-days";
@@ -178,7 +178,7 @@ export async function castVote(issueId: string, value: 1 | -1): Promise<ActionRe
         upvotes: sql`(select count(*) from ${votes} where ${votes.issueId} = ${issueId} and ${votes.value} = 1)`,
         downvotes: sql`(select count(*) from ${votes} where ${votes.issueId} = ${issueId} and ${votes.value} = -1)`,
         score: sql`(select coalesce(sum(${votes.value}), 0) from ${votes} where ${votes.issueId} = ${issueId})`,
-        isUrgent: sql`case when (select count(*) from ${votes} where ${votes.issueId} = ${issueId} and ${votes.value} = 1) >= 10 then true else ${issues.isUrgent} end`,
+        isUrgent: sql`(select count(*) from ${votes} where ${votes.issueId} = ${issueId} and ${votes.value} = 1) >= ${URGENT_UPVOTES}`,
       })
       .where(eq(issues.id, issueId))
       .returning({ upvotes: issues.upvotes, downvotes: issues.downvotes, score: issues.score });
