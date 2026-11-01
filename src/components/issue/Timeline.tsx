@@ -57,7 +57,7 @@ export async function Timeline({ status, entries }: { status: IssueStatus; entri
 
   const rejected = status === "rejected";
   return (
-    <section className="rounded-[4px] border border-line bg-surface p-5" aria-labelledby="progress-title">
+    <section className="rounded-[4px] border border-line bg-surface p-3.5 sm:p-5" aria-labelledby="progress-title">
       <h2 id="progress-title" className="text-base font-semibold">
         {t("progress")}
       </h2>
@@ -74,7 +74,7 @@ export async function Timeline({ status, entries }: { status: IssueStatus; entri
                 <span className={cn("relative z-10 flex h-6 w-6 items-center justify-center rounded-[3px] border", done ? "border-brand bg-brand text-[var(--btn-primary-text)]" : "border-line bg-surface text-faint")}>
                   {done ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <Circle className="h-2 w-2" aria-hidden="true" />}
                 </span>
-                <span className={cn("mt-1.5 px-0.5 text-[11px] font-semibold leading-tight sm:text-xs", done ? "text-ink" : "text-faint")}>{t(s.key)}</span>
+                <span className={cn("mt-1.5 px-0.5 text-[10px] sm:text-xs font-semibold leading-tight line-clamp-2", done ? "text-ink" : "text-faint")}>{t(s.key)}</span>
               </li>
             );
           })}

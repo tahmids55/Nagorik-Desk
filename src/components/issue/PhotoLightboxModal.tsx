@@ -165,20 +165,25 @@ export function PhotoLightboxModal({
     });
   };
 
-  // Touch swipe support for photo slider
+  // Touch swipe support for photo slider with directional isolation
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const onTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX;
+    touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
 
   const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartXRef.current === null) return;
-    const diff = e.changedTouches[0].clientX - touchStartXRef.current;
-    if (diff > 45) {
-      prevImage();
-    } else if (diff < -45) {
-      nextImage();
+    if (!touchStartRef.current) return;
+    const diffX = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const diffY = e.changedTouches[0].clientY - touchStartRef.current.y;
+    // Only swipe if horizontal motion exceeds vertical scroll motion
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+      if (diffX > 0) {
+        prevImage();
+      } else {
+        nextImage();
+      }
     }
-    touchStartXRef.current = null;
+    touchStartRef.current = null;
   };
 
   const authorName = item.author.anonymous && !item.author.id ? t("anonymous_citizen") : item.author.name;
@@ -202,7 +207,7 @@ export function PhotoLightboxModal({
       >
         {/* ───────────── LEFT SIDE: Photo Viewer & Slider ───────────── */}
         <section
-          className="relative flex flex-1 flex-col items-center justify-center bg-[#07090F] h-[40vh] min-h-[250px] max-h-[45vh] lg:h-auto lg:min-h-0 lg:max-h-full select-none overflow-hidden"
+          className="relative flex flex-col items-center justify-center bg-[#07090F] h-[30vh] min-h-[180px] max-h-[36vh] lg:h-auto lg:min-h-0 lg:max-h-full select-none overflow-hidden"
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
           aria-label={t("photo_of", { title: item.title })}
@@ -220,7 +225,7 @@ export function PhotoLightboxModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex h-8 w-8 items-center justify-center rounded-[3px] bg-black/60 text-white/90 hover:bg-black/90 hover:text-white border border-white/15 backdrop-blur-sm transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-[3px] bg-black/60 text-white/90 hover:bg-black/90 hover:text-white border border-white/15 backdrop-blur-sm transition-colors active:scale-95"
               aria-label={t("close")}
               title={t("close")}
             >
@@ -236,7 +241,7 @@ export function PhotoLightboxModal({
                 key={activeImageId}
                 src={`/api/media/${activeImageId}`}
                 alt={t("photo_of", { title: item.title })}
-                className="max-h-[46vh] lg:max-h-[82vh] max-w-full object-contain transition-opacity duration-150"
+                className="max-h-[28vh] lg:max-h-[82vh] max-w-full object-contain transition-opacity duration-150"
               />
             ) : (
               <div className="text-sm text-neutral-400">{t("no_image")}</div>
@@ -249,7 +254,7 @@ export function PhotoLightboxModal({
               <button
                 type="button"
                 onClick={prevImage}
-                className="absolute left-3 top-1/2 z-20 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-[3px] bg-black/60 text-white/90 hover:bg-black/90 hover:text-white border border-white/15 backdrop-blur-sm transition-all shadow-md focus:outline-none"
+                className="hidden sm:flex absolute left-3 top-1/2 z-20 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-[3px] bg-black/60 text-white/90 hover:bg-black/90 hover:text-white border border-white/15 backdrop-blur-sm transition-all shadow-md focus:outline-none"
                 aria-label={t("previous")}
               >
                 <ChevronLeft className="h-6 w-6" aria-hidden="true" />
@@ -257,14 +262,14 @@ export function PhotoLightboxModal({
               <button
                 type="button"
                 onClick={nextImage}
-                className="absolute right-3 top-1/2 z-20 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-[3px] bg-black/60 text-white/90 hover:bg-black/90 hover:text-white border border-white/15 backdrop-blur-sm transition-all shadow-md focus:outline-none"
+                className="hidden sm:flex absolute right-3 top-1/2 z-20 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-[3px] bg-black/60 text-white/90 hover:bg-black/90 hover:text-white border border-white/15 backdrop-blur-sm transition-all shadow-md focus:outline-none"
                 aria-label={t("next")}
               >
                 <ChevronRight className="h-6 w-6" aria-hidden="true" />
               </button>
 
               {/* Bottom Thumbnail Strip */}
-              <div className="absolute bottom-3 left-0 right-0 z-20 flex justify-center gap-1.5 px-3">
+              <div className="hidden sm:flex absolute bottom-3 left-0 right-0 z-20 justify-center gap-1.5 px-3">
                 {item.images.map((id, idx) => (
                   <button
                     key={id}
@@ -444,7 +449,7 @@ export function PhotoLightboxModal({
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
                     placeholder={t("comment_placeholder")}
-                    className="input rounded-[3px] text-sm resize-y"
+                    className="input rounded-[3px] text-[16px] sm:text-sm resize-y"
                     disabled={submittingComment}
                   />
                   <div className="flex items-center justify-between gap-2">

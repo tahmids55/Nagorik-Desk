@@ -70,7 +70,7 @@ export function VoteBar({ issueId, score, upvotes, downvotes, myVote, isMine, si
   const meterText = reached ? t("urgent_reached") : t("urgent_progress", { n: formatNumber(remaining, lang) });
   const iconCls = big ? "h-7 w-7" : "h-[22px] w-[22px]";
   return (
-    <div className="flex items-center gap-2">
+    <div className="relative flex items-center gap-1.5 sm:gap-2">
       <div
         className={cn("inline-flex items-center rounded-[3px] border border-line bg-surface", big ? "gap-1 px-1.5 py-1" : "gap-0.5 px-1 py-0.5")}
         role="group"
@@ -82,11 +82,11 @@ export function VoteBar({ issueId, score, upvotes, downvotes, myVote, isMine, si
           onClick={() => vote(1)}
           aria-pressed={state.myVote === 1}
           aria-label={t("upvote")}
-          className={cn("flex h-8 w-8 items-center justify-center rounded-[3px] transition-colors hover:bg-brand/15 active:scale-95", state.myVote === 1 ? "text-brand" : "text-muted", big && "h-10 w-10")}
+          className={cn("flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-[3px] transition-colors hover:bg-brand/15 active:scale-95", state.myVote === 1 ? "text-brand" : "text-muted", big && "!h-9 !w-9 sm:!h-10 sm:!w-10")}
         >
           <ArrowBigUp className={iconCls} fill={state.myVote === 1 ? "currentColor" : "none"} aria-hidden="true" />
         </button>
-        <span className={cn("min-w-[2ch] text-center font-semibold tabular-nums px-0.5", big ? "px-1 text-lg" : "text-sm", state.myVote === 1 && "text-brand", state.myVote === -1 && "text-danger")} aria-live="polite">
+        <span className={cn("min-w-[2ch] text-center font-semibold tabular-nums px-0.5", big ? "px-1 text-base sm:text-lg" : "text-sm", state.myVote === 1 && "text-brand", state.myVote === -1 && "text-danger")} aria-live="polite">
           {formatNumber(state.score, lang)}
         </span>
         <button
@@ -94,7 +94,7 @@ export function VoteBar({ issueId, score, upvotes, downvotes, myVote, isMine, si
           onClick={() => vote(-1)}
           aria-pressed={state.myVote === -1}
           aria-label={t("downvote")}
-          className={cn("flex h-8 w-8 items-center justify-center rounded-[3px] transition-colors hover:bg-danger/15 active:scale-95", state.myVote === -1 ? "text-danger" : "text-muted", big && "h-10 w-10")}
+          className={cn("flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-[3px] transition-colors hover:bg-danger/15 active:scale-95", state.myVote === -1 ? "text-danger" : "text-muted", big && "!h-9 !w-9 sm:!h-10 sm:!w-10")}
         >
           <ArrowBigDown className={iconCls} fill={state.myVote === -1 ? "currentColor" : "none"} aria-hidden="true" />
         </button>
@@ -109,15 +109,15 @@ export function VoteBar({ issueId, score, upvotes, downvotes, myVote, isMine, si
             aria-valuemin={0}
             aria-valuemax={URGENT_UPVOTES}
             aria-valuenow={state.upvotes}
-            className="block h-1 w-8 shrink-0 overflow-hidden rounded-[2px] bg-neutral-fill sm:w-12"
+            className="block h-1 w-6 sm:w-12 shrink-0 overflow-hidden rounded-[2px] bg-neutral-fill"
           >
             <span className="block h-full bg-danger/70 transition-[width] duration-200" style={{ width: `${progress}%` }} />
           </span>
         )}
-        <span className={cn("hidden truncate text-[11px] sm:inline", reached ? "font-medium text-danger" : "text-muted", big && "!inline")}>{meterText}</span>
+        <span className={cn("hidden truncate text-[11px] sm:inline", reached ? "font-medium text-danger" : "text-muted")}>{meterText}</span>
       </div>
       {error && (
-        <span role="alert" className="text-xs text-danger">
+        <span role="alert" className="absolute -bottom-5 left-0 z-10 text-[11px] text-danger whitespace-nowrap bg-surface px-1 py-0.5 rounded-[2px] shadow-sm border border-line">
           {error}
         </span>
       )}

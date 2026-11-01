@@ -73,7 +73,7 @@ export default async function IssuePage({ params }: Props) {
 
       {/* Location Details Card */}
       <section className="rounded-[4px] border border-line bg-surface p-4 shadow-none">
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div className="min-w-0">
             <h2 className="text-sm font-semibold">{t("location")}</h2>
             <p className="mt-1.5 flex items-start gap-2 text-sm text-muted">
@@ -95,7 +95,7 @@ export default async function IssuePage({ params }: Props) {
               </span>
             </p>
           </div>
-          <Link href={`/map?focus=${issue.id}`} className="btn-secondary btn-sm shrink-0 rounded-[3px]">
+          <Link href={`/map?focus=${issue.id}`} className="btn-secondary btn-sm self-start sm:self-auto shrink-0 rounded-[3px]">
             {t("open_map")}
           </Link>
         </div>

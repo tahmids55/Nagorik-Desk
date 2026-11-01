@@ -85,6 +85,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -155,7 +156,7 @@ html[data-large-text="1"] body {
   }
 
   .input {
-    @apply w-full rounded-[3px] border border-line bg-surface px-3.5 py-2.5 text-[15px] text-ink placeholder:text-muted focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand disabled:opacity-60;
+    @apply w-full rounded-[3px] border border-line bg-surface px-3.5 py-2.5 text-[16px] sm:text-[15px] text-ink placeholder:text-muted focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand disabled:opacity-60;
   }
   .label {
     @apply mb-1.5 block text-[13px] font-semibold text-muted;

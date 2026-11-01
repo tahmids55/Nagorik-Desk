@@ -61,7 +61,7 @@ export function BookmarkButton({ issueId, initialSaved, signedIn, showLabel = fa
         aria-pressed={saved}
         aria-label={saved ? t("unsave") : t("save")}
         title={saved ? t("unsave") : t("save")}
-        className={cn("btn-ghost btn-sm min-h-[40px] min-w-[40px] gap-1.5 rounded-[3px] sm:min-h-[34px] sm:min-w-0", saved ? "text-brand" : "text-muted")}
+        className={cn("btn-ghost btn-sm h-9 min-h-[36px] min-w-[36px] sm:min-h-0 sm:min-w-0 px-2 sm:px-2.5 gap-1.5 rounded-[3px] active:scale-95", saved ? "text-brand" : "text-muted")}
       >
         <Bookmark className="h-[18px] w-[18px]" fill={saved ? "currentColor" : "none"} aria-hidden="true" />
         <span className={cn("text-sm font-medium", !showLabel && "hidden sm:inline")}>{label}</span>

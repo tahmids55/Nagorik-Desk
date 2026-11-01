@@ -109,8 +109,8 @@ export function ImageUploader({ max, onChange, label }: { max: number; onChange:
                 {t("retry")}
               </button>
             )}
-            <button type="button" onClick={() => remove(i.key)} className="absolute right-1 top-1 rounded-[3px] bg-bg/80 p-1 hover:bg-bg" aria-label={t("remove_photo")}>
-              <X className="h-3.5 w-3.5" aria-hidden="true" />
+            <button type="button" onClick={() => remove(i.key)} className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-[3px] bg-bg/90 p-1 hover:bg-bg shadow-sm active:scale-95" aria-label={t("remove_photo")}>
+              <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
         ))}

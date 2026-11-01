@@ -50,11 +50,20 @@ export default async function ProfilePage({ params, searchParams }: Props) {
       <section className="card rounded-[4px] shadow-none mt-4 overflow-hidden">
         <div className="h-32 bg-brand-tint border-b border-line sm:h-40" aria-hidden="true" />
         <div className="px-5 pb-5">
-          <div className="-mt-12 flex flex-wrap items-end gap-4 sm:-mt-14">
-            <Avatar name={profile.name} mediaId={profile.avatarMediaId} size="xl" className="ring-4 ring-surface" />
+          <div className="-mt-12 flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 sm:-mt-14">
+            <div className="flex items-end justify-between gap-3">
+              <Avatar name={profile.name} mediaId={profile.avatarMediaId} size="lg" className="sm:hidden ring-4 ring-surface" />
+              <Avatar name={profile.name} mediaId={profile.avatarMediaId} size="xl" className="hidden sm:inline-flex ring-4 ring-surface" />
+              {own && (
+                <Link href="/settings" className="btn-secondary btn-sm rounded-[3px] font-medium sm:hidden">
+                  <Pencil className="h-4 w-4" aria-hidden="true" />
+                  {t("edit_profile")}
+                </Link>
+              )}
+            </div>
             <div className="min-w-0 flex-1 pb-1">
-              <h1 className="truncate text-2xl font-semibold">{profile.name}</h1>
-              <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
+              <h1 className="truncate text-xl sm:text-2xl font-semibold">{profile.name}</h1>
+              <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-muted">
                 {roleChip && (
                   <span className="inline-flex items-center gap-1 rounded-[2px] border border-brand/40 bg-brand-soft px-2 py-0.5 text-xs font-medium text-brand">
                     <roleChip.icon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -75,7 +84,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
               </p>
             </div>
             {own && (
-              <Link href="/settings" className="btn-secondary btn-sm rounded-[3px] font-medium">
+              <Link href="/settings" className="btn-secondary btn-sm rounded-[3px] font-medium hidden sm:inline-flex">
                 <Pencil className="h-4 w-4" aria-hidden="true" />
                 {t("edit_profile")}
               </Link>
@@ -114,15 +123,15 @@ export default async function ProfilePage({ params, searchParams }: Props) {
             )}
           </ul>
 
-          <dl className="mt-5 grid grid-cols-3 gap-3 text-left">
+          <dl className="mt-5 grid grid-cols-3 gap-2 sm:gap-3 text-left">
             {[
               [profile.stats.posts, "stat_posts"],
               [profile.stats.supportReceived, "stat_support"],
               [profile.stats.resolved, "stat_resolved_posts"],
             ].map(([v, k]) => (
-              <div key={k as string} className="rounded-[3px] bg-raised px-3 py-2.5">
-                <dd className="text-xl font-medium tabular-nums">{n(v as number)}</dd>
-                <dt className="text-xs text-muted">{t(k as "stat_posts")}</dt>
+              <div key={k as string} className="rounded-[3px] bg-raised px-2 sm:px-3 py-2 sm:py-2.5">
+                <dd className="text-lg sm:text-xl font-medium tabular-nums">{n(v as number)}</dd>
+                <dt className="text-[11px] sm:text-xs text-muted leading-tight">{t(k as "stat_posts")}</dt>
               </div>
             ))}
           </dl>

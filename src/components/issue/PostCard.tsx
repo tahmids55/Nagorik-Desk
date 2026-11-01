@@ -58,23 +58,23 @@ export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; s
   return (
     <article className={cn("rounded-[4px] border border-line bg-surface shadow-none overflow-hidden", item.mpPriority && "border-brand/50")} aria-labelledby={`t-${item.id}`}>
       {item.mpPriority && (
-        <div className="flex items-center gap-2 bg-brand-soft px-4 py-2 text-xs font-semibold text-brand">
-          <Star className="h-4 w-4" fill="currentColor" aria-hidden="true" />
-          {t("mp_priority")}
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-brand-soft px-3.5 py-1.5 text-xs font-semibold text-brand">
+          <Star className="h-4 w-4 shrink-0" fill="currentColor" aria-hidden="true" />
+          <span>{t("mp_priority")}</span>
           {item.mpTargetDate && <span className="font-normal text-muted">· {t("target_date", { date: item.mpTargetDate })}</span>}
         </div>
       )}
       <div className="p-3 sm:p-4 pb-2 sm:pb-3">
-        <header className="flex items-start gap-3">
+        <header className="flex items-start gap-2.5 sm:gap-3">
           {item.author.id ? (
-            <Link href={`/u/${item.author.id}`} aria-label={authorName}>
-              <Avatar name={item.author.name} mediaId={item.author.avatarMediaId} />
+            <Link href={`/u/${item.author.id}`} aria-label={authorName} className="shrink-0">
+              <Avatar name={item.author.name} mediaId={item.author.avatarMediaId} size="sm" className="sm:h-10 sm:w-10" />
             </Link>
           ) : (
-            <Avatar name="" anonymous />
+            <Avatar name="" anonymous size="sm" className="sm:h-10 sm:w-10 shrink-0" />
           )}
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[15px] font-semibold leading-tight">
+            <p className="truncate text-sm sm:text-[15px] font-semibold leading-tight">
               {item.author.id ? (
                 <Link href={`/u/${item.author.id}`} className="hover:underline">
                   {authorName}
@@ -87,15 +87,15 @@ export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; s
             <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-xs text-muted">
               <TimeAgo date={item.createdAt} />
               <span aria-hidden="true">·</span>
-              <span className="inline-flex items-center gap-1">
-                <MapPin className="h-3 w-3" aria-hidden="true" />
-                {item.labels.area}
-                {!item.precise && <span className="text-faint">({t("approximate")})</span>}
+              <span className="inline-flex items-center gap-1 min-w-0 max-w-[130px] sm:max-w-none truncate">
+                <MapPin className="h-3 w-3 shrink-0" aria-hidden="true" />
+                <span className="truncate">{item.labels.area}</span>
+                {!item.precise && <span className="text-faint shrink-0">({t("approximate")})</span>}
               </span>
             </p>
           </div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <StatusChip status={item.status} />
+          <div className="flex items-center gap-1 shrink-0">
+            <StatusChip status={item.status} className="text-[11px] sm:text-xs" />
             <PostMenu item={item} signedIn={signedIn} />
           </div>
         </header>
@@ -161,7 +161,7 @@ export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; s
       />
 
       {item.labels.stakeholder && (
-        <div className="mx-4 mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-line pt-2 text-[13px]">
+        <div className="mx-3 sm:mx-4 mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-line pt-2 text-[13px]">
           <Building2 className="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
           <span className="text-muted">{t("assigned_to")}</span>
           <span className="font-semibold">{item.labels.stakeholder}</span>
@@ -173,25 +173,27 @@ export function PostCard({ item, signedIn, detail = false }: { item: FeedItem; s
         </div>
       )}
 
-      <footer className="mt-3 flex flex-wrap items-center gap-x-1 gap-y-1 border-t border-line px-2 sm:px-3 py-2">
-        <VoteBar
-          size={detail ? "lg" : "md"}
-          issueId={item.id}
-          score={item.score}
-          upvotes={item.upvotes}
-          downvotes={item.downvotes}
-          myVote={item.myVote}
-          isMine={item.isMine}
-          signedIn={signedIn}
-        />
-        <Link href={`${href}#comments`} className="btn-ghost btn-sm rounded-[3px] ml-1" aria-label={tn("comments", item.commentCount)}>
-          <MessageCircle className="h-[18px] w-[18px]" aria-hidden="true" />
-          <span>{formatNumber(item.commentCount, lang)}</span>
-        </Link>
-        <ShareMenu path={href} title={item.title} />
-        <span className="ml-auto">
+      <footer className="mt-3 flex items-center justify-between gap-1 border-t border-line px-2.5 py-1.5 sm:px-3">
+        <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+          <VoteBar
+            size={detail ? "lg" : "md"}
+            issueId={item.id}
+            score={item.score}
+            upvotes={item.upvotes}
+            downvotes={item.downvotes}
+            myVote={item.myVote}
+            isMine={item.isMine}
+            signedIn={signedIn}
+          />
+          <Link href={`${href}#comments`} className="btn-ghost btn-sm h-9 min-h-0 px-2 sm:px-2.5 rounded-[3px] shrink-0 active:scale-95" aria-label={tn("comments", item.commentCount)}>
+            <MessageCircle className="h-[18px] w-[18px]" aria-hidden="true" />
+            <span className="text-xs">{formatNumber(item.commentCount, lang)}</span>
+          </Link>
+          <ShareMenu path={href} title={item.title} />
+        </div>
+        <div className="flex items-center shrink-0">
           <BookmarkButton issueId={item.id} initialSaved={item.saved} signedIn={signedIn} />
-        </span>
+        </div>
       </footer>
 
       {lightboxIndex !== null && (

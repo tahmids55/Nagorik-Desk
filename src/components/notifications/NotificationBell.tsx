@@ -156,7 +156,7 @@ export function NotificationBell({ initialUnread = 0 }: { initialUnread?: number
         aria-expanded={isOpen}
         aria-haspopup="dialog"
         className={cn(
-          "btn-ghost btn-sm relative !px-2.5 rounded-[3px] transition-colors",
+          "btn-ghost btn-sm relative !px-2.5 rounded-[3px] transition-colors min-h-[40px] min-w-[40px] sm:min-h-[34px] sm:min-w-0 flex items-center justify-center",
           isOpen && "bg-neutral-fill text-ink"
         )}
       >
@@ -173,7 +173,7 @@ export function NotificationBell({ initialUnread = 0 }: { initialUnread?: number
         <div
           role="dialog"
           aria-label={t("notifications")}
-          className="fixed inset-x-2 top-14 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full mt-1 sm:mt-2 w-auto sm:w-[390px] max-w-[calc(100vw-1rem)] z-50 rounded-[4px] border border-line bg-surface shadow-popover overflow-hidden animate-in fade-in zoom-in-95 duration-100"
+          className="fixed inset-x-2 top-[calc(3.5rem+env(safe-area-inset-top)+0.25rem)] sm:absolute sm:inset-x-auto sm:right-0 sm:top-full mt-1 sm:mt-2 w-auto sm:w-[390px] max-w-[calc(100vw-1rem)] z-50 rounded-[4px] border border-line bg-surface shadow-popover overflow-hidden animate-in fade-in zoom-in-95 duration-100"
         >
           {/* Popover Header */}
           <div className="flex items-center justify-between border-b border-line px-4 py-3 bg-surface">
@@ -196,7 +196,7 @@ export function NotificationBell({ initialUnread = 0 }: { initialUnread?: number
           </div>
 
           {/* Notification List */}
-          <div className="max-h-[380px] overflow-y-auto scroll-thin divide-y divide-line/60">
+          <div className="max-h-[calc(100dvh-11rem)] sm:max-h-[380px] overflow-y-auto scroll-thin divide-y divide-line/60">
             {loading && items.length === 0 ? (
               <div className="flex items-center justify-center py-10 text-muted">
                 <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />

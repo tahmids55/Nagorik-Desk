@@ -13,30 +13,40 @@ export function ImageGrid({
   onImageClick?: (index: number) => void;
 }) {
   if (ids.length === 0) return null;
+  const count = ids.length;
   const size = full ? "" : "?s=thumb";
-  const cols = ids.length === 1 ? "grid-cols-1" : ids.length === 2 ? "grid-cols-2" : "grid-cols-3";
+  const displayIds = count > 4 ? ids.slice(0, 4) : ids;
+  const cols = count === 1 ? "grid-cols-1" : count === 2 || count === 4 ? "grid-cols-2" : "grid-cols-3";
 
   return (
     <div className={cn("grid gap-1 overflow-hidden rounded-[3px]", cols)}>
-      {ids.map((id, idx) => {
+      {displayIds.map((id, idx) => {
+        const isMore = idx === 3 && count > 4;
         const content = (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={`/api/media/${id}${size}`}
-            alt={alt}
-            loading="lazy"
-            decoding="async"
-            className={cn(
-              "w-full object-cover transition-opacity hover:opacity-95",
-              ids.length === 1
-                ? full
-                  ? "max-h-[520px] object-contain"
-                  : "max-h-[420px]"
-                : full
-                ? "aspect-[4/3]"
-                : "aspect-square"
+          <div className="relative w-full h-full overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/api/media/${id}${size}`}
+              alt={alt}
+              loading="lazy"
+              decoding="async"
+              className={cn(
+                "w-full object-cover transition-opacity hover:opacity-95 active:opacity-85",
+                count === 1
+                  ? full
+                    ? "max-h-[70vh] object-contain"
+                    : "max-h-[300px] sm:max-h-[420px]"
+                  : full
+                  ? "aspect-[4/3]"
+                  : "aspect-square"
+              )}
+            />
+            {isMore && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60 font-semibold text-white text-lg sm:text-xl tracking-wide backdrop-blur-[1px]">
+                +{count - 3}
+              </div>
             )}
-          />
+          </div>
         );
 
         if (onImageClick) {

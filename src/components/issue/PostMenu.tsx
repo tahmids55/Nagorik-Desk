@@ -66,7 +66,7 @@ export function PostMenu({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="rounded-[3px] p-1 text-muted hover:bg-neutral-fill hover:text-ink transition-colors"
+        className="flex h-8 w-8 sm:h-7 sm:w-7 items-center justify-center rounded-[3px] p-1 text-muted hover:bg-neutral-fill hover:text-ink transition-colors active:scale-95"
         aria-label={t("more_options")}
         aria-expanded={open}
         aria-haspopup="menu"

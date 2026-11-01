@@ -45,7 +45,7 @@ export function LocationPicker({ value, onChange }: { value: Pin | null; onChang
       const m = L.marker([value.lat, value.lng], {
         draggable: true,
         keyboard: false,
-        icon: L.divIcon({ className: "ngk-picker-root", html: '<span class="ngk-picker-pin"></span>', iconSize: [18, 18], iconAnchor: [9, 9] }),
+        icon: L.divIcon({ className: "ngk-picker-root", html: '<span class="ngk-picker-pin shadow-md"></span>', iconSize: [24, 24], iconAnchor: [12, 12] }),
       }).addTo(map);
       m.on("dragend", () => {
         const ll = m.getLatLng();
@@ -87,7 +87,7 @@ export function LocationPicker({ value, onChange }: { value: Pin | null; onChang
       <div className="relative overflow-hidden rounded-[3px] border border-line">
         <div ref={ref} className="h-[300px] w-full bg-neutral-fill" role="application" aria-label={t("picker_aria")} />
         <LayerSwitcher value={style} onChange={setStyle} className="right-3 top-3" />
-        <button type="button" onClick={locate} className="btn-secondary btn-sm absolute bottom-6 left-3 z-[1000] rounded-[3px] border border-line bg-surface">
+        <button type="button" onClick={locate} className="btn-secondary btn-sm absolute bottom-4 left-3 z-[1000] rounded-[3px] border border-line bg-surface shadow-sm active:scale-95 text-xs sm:text-[13px]">
           <Locate className="h-4 w-4" aria-hidden="true" />
           {t("use_my_location")}
         </button>

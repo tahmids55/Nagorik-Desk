@@ -38,7 +38,7 @@ export function BackToTop() {
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
       }}
-      className="fixed right-4 z-30 flex h-10 w-10 items-center justify-center rounded-[3px] border border-line bg-surface text-muted shadow-sm transition-colors hover:border-brand/50 hover:text-brand bottom-[calc(4.5rem+env(safe-area-inset-bottom))] md:bottom-6"
+      className="fixed right-4 z-30 flex h-11 w-11 items-center justify-center rounded-[3px] border border-line bg-surface text-muted shadow-sm transition-colors hover:border-brand/50 hover:text-brand bottom-[calc(5rem+env(safe-area-inset-bottom))] md:bottom-6 active:scale-95"
     >
       <ArrowUp className="h-[18px] w-[18px]" aria-hidden="true" />
     </button>

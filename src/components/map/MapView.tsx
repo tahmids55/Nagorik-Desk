@@ -148,6 +148,7 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
   useEffect(() => {
     const el = ref.current;
     if (!map || !el) return;
+    if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) return;
     const show = (e: Event) => {
       const root = (e.target as HTMLElement | null)?.closest?.(`.${PIN_ROOT}`) as HTMLElement | null;
       const pinEl = (e.target as HTMLElement | null)?.closest?.("[data-pin]") as HTMLElement | null;
@@ -237,7 +238,7 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
   );
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem)] min-h-[520px] flex-col md:h-[calc(100vh-3.5rem)]">
+    <div className="flex h-[calc(100dvh-3.5rem-4.5rem)] min-h-[440px] flex-col md:h-[calc(100vh-3.5rem)]">
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-2 border-b border-line bg-surface px-3 py-2.5 sm:px-4">
         <div className="scroll-thin flex gap-1.5 overflow-x-auto" role="group" aria-label={t("filter_status")}>
@@ -302,7 +303,7 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
           <LayerSwitcher value={style} onChange={setStyle} className="right-3 top-3" />
 
           {map && (
-            <button type="button" onClick={locate} className="btn-secondary btn-sm absolute bottom-8 right-3 z-[1000] !px-2.5 rounded-[3px] border border-line bg-surface" aria-label={t("use_my_location")}>
+            <button type="button" onClick={locate} className="btn-secondary btn-sm absolute top-16 right-3 z-[1000] !px-2.5 rounded-[3px] border border-line bg-surface shadow-sm active:scale-95" aria-label={t("use_my_location")}>
               <Locate className="h-[18px] w-[18px]" aria-hidden="true" />
             </button>
           )}
@@ -334,7 +335,7 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
           )}
 
           {current && (
-            <div className="rounded-[4px] border border-line bg-surface shadow-popover absolute bottom-4 left-3 right-3 z-[1050] p-4 sm:right-auto sm:w-[360px]" role="dialog" aria-label={current.title}>
+            <div className="rounded-[4px] border border-line bg-surface shadow-popover absolute bottom-3 left-3 right-3 z-[1050] p-3.5 sm:p-4 sm:right-auto sm:w-[360px]" role="dialog" aria-label={current.title}>
               <button type="button" className="absolute right-2 top-2 rounded-[3px] p-1 text-muted hover:bg-raised" onClick={() => setSelected(null)} aria-label={t("close")}>
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -360,13 +361,13 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
         </div>
 
         {/* Side list */}
-        <aside className={cn("scroll-thin w-full shrink-0 overflow-y-auto border-l border-line bg-surface md:block md:w-[340px]", mobileView === "map" ? "hidden" : "block")} aria-label={t("map_list_label")}>
+        <aside className={cn("scroll-thin w-full shrink-0 overflow-y-auto border-l border-line bg-surface md:block md:w-[340px] pb-16 md:pb-0", mobileView === "map" ? "hidden" : "block")} aria-label={t("map_list_label")}>
           {list}
         </aside>
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line bg-surface px-4 py-2 text-xs text-muted">
+      <div className="hidden sm:flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line bg-surface px-4 py-2 text-xs text-muted">
         {[
           ["var(--status-new)", "legend_open"],
           ["var(--status-inprogress)", "legend_progress"],

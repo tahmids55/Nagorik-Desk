@@ -165,7 +165,7 @@ export function IssueComposer({ apiKey, mapId, categories, areas, defaultUpazila
 
       <fieldset>
         <legend className="label">{t("composer_category")}</legend>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2 sm:grid-cols-3">
           {categories.map((c) => (
             <label key={c.id} className={cn("flex cursor-pointer items-center gap-2 rounded-[3px] border px-3 py-2.5 text-[13px] font-semibold transition-colors", category === c.id ? "border-brand bg-brand-soft text-brand" : "border-line bg-surface text-muted hover:border-brand/50")}>
               <input type="radio" name="categoryId" value={c.id} checked={category === c.id} onChange={() => setCategory(c.id)} className="sr-only" />
@@ -213,7 +213,7 @@ export function IssueComposer({ apiKey, mapId, categories, areas, defaultUpazila
         <h2 className="text-sm font-semibold">{t("composer_where")}</h2>
         <LocationPicker value={pin} onChange={setPin} />
         <FieldError state={state} name="location" />
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-3">
           <div>
             <label htmlFor="upazilaId" className="label">
               {t("upazila")}

@@ -42,13 +42,13 @@ export function UserMenu({ id, name, avatarMediaId, role }: { id: string; name: 
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={t("account_menu")}
-        className="flex items-center gap-1 rounded-[3px] p-0.5 hover:bg-neutral-fill"
+        className="flex min-h-[40px] min-w-[40px] sm:min-h-0 sm:min-w-0 items-center justify-center gap-1 rounded-[3px] p-1 hover:bg-neutral-fill"
       >
         <Avatar name={name} mediaId={avatarMediaId} size="sm" />
         <ChevronDown className="mr-1 hidden h-4 w-4 text-muted sm:block" aria-hidden="true" />
       </button>
       {open && (
-        <div role="menu" className="absolute right-0 top-full z-50 mt-2 w-64 rounded-[4px] border border-line bg-surface p-2 shadow-popover">
+        <div role="menu" className="absolute right-0 top-full z-50 mt-2 w-64 max-h-[calc(100dvh-4.5rem)] overflow-y-auto scroll-thin rounded-[4px] border border-line bg-surface p-2 shadow-popover">
           <Link href={`/u/${id}`} className="mb-1 flex items-center gap-3 rounded-[3px] p-2 hover:bg-neutral-fill" onClick={() => setOpen(false)}>
             <Avatar name={name} mediaId={avatarMediaId} size="md" />
             <span className="min-w-0">

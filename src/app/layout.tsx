@@ -21,6 +21,7 @@ export async function generateViewport(): Promise<Viewport> {
     colorScheme: theme,
     width: "device-width",
     initialScale: 1,
+    viewportFit: "cover",
   };
 }
 
@@ -54,7 +55,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             {t("skip_to_content")}
           </a>
           <TopNav />
-          <main id="main">{children}</main>
+          <main id="main" className="min-h-[calc(100vh-3.5rem)] pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
           <Footer />
           <BottomNav profileHref={session ? `/u/${session.user.id}` : "/login"} />
           <BackToTop />

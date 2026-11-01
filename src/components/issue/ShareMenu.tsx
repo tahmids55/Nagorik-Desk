@@ -97,12 +97,12 @@ export function ShareMenu({ path, title }: { path: string; title: string }) {
 
   return (
     <div ref={rootRef} className="relative">
-      <button ref={triggerRef} type="button" onClick={toggle} className="btn-ghost btn-sm rounded-[3px]" aria-label={t("share")} aria-haspopup="menu" aria-expanded={open}>
+      <button ref={triggerRef} type="button" onClick={toggle} className="btn-ghost btn-sm h-9 min-h-[36px] px-2.5 rounded-[3px] active:scale-95" aria-label={t("share")} aria-haspopup="menu" aria-expanded={open}>
         <Share2 className="h-[18px] w-[18px]" aria-hidden="true" />
         <span className="hidden sm:inline">{copied ? t("link_copied") : t("share")}</span>
       </button>
       {open && (
-        <div role="menu" aria-label={t("share")} className={`absolute bottom-full z-30 mb-1 w-52 max-w-[calc(100vw-1rem)] rounded-[4px] border border-line bg-surface p-1 shadow-popover ${alignRight ? "right-0" : "left-0"}`}>
+        <div role="menu" aria-label={t("share")} className={`absolute bottom-full z-30 mb-1.5 w-48 sm:w-52 max-w-[calc(100vw-2rem)] rounded-[4px] border border-line bg-surface p-1 shadow-popover left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto ${alignRight ? "sm:right-0" : "sm:left-0"}`}>
           <a role="menuitem" href={whatsapp} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className={itemClass}>
             <MessageCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
             {t("share_whatsapp")}

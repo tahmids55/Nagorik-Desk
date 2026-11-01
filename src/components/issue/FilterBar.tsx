@@ -59,19 +59,19 @@ export function FilterBar({ areas, categories }: { areas: Option[]; categories: 
           value={q}
           onChange={(e) => setQ(e.target.value)}
           maxLength={80}
-          className="input rounded-[3px] !pl-10"
+          className="input rounded-[3px] !pl-10 text-[16px] sm:text-sm"
           placeholder={t("search_placeholder")}
           aria-label={t("search_placeholder")}
         />
       </form>
 
-      <div className="scroll-thin -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-0.5" role="group" aria-label={t("filter_status")}>
+      <div className="scroll-thin -mx-1 flex items-center gap-1.5 overflow-x-auto px-1 py-0.5" role="group" aria-label={t("filter_status")}>
         <button
           type="button"
           onClick={() => set({ urgent: urgent ? "" : "1" })}
           aria-pressed={urgent}
           className={cn(
-            "inline-flex shrink-0 items-center gap-1 rounded-[3px] border px-3 py-1.5 text-[13px] font-medium transition-colors",
+            "inline-flex shrink-0 items-center gap-1 rounded-[3px] border px-3 py-1.5 min-h-[36px] text-xs sm:text-[13px] font-medium transition-colors active:scale-95",
             urgent ? "border-danger bg-danger text-surface" : "border-danger/40 bg-surface text-danger hover:bg-danger/10"
           )}
         >
@@ -85,7 +85,7 @@ export function FilterBar({ areas, categories }: { areas: Option[]; categories: 
             onClick={() => set({ status: s.value })}
             aria-pressed={status === s.value}
             className={cn(
-              "shrink-0 rounded-[3px] border px-3 py-1.5 text-[13px] font-medium transition-colors",
+              "shrink-0 rounded-[3px] border px-3 py-1.5 min-h-[36px] text-xs sm:text-[13px] font-medium transition-colors active:scale-95",
               status === s.value
                 ? "border-ink bg-ink text-surface"
                 : "border-line bg-surface text-ink-secondary hover:border-line-strong hover:text-ink"
@@ -96,8 +96,8 @@ export function FilterBar({ areas, categories }: { areas: Option[]; categories: 
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        <select className="input rounded-[3px] !py-2 text-sm" value={params.get("area") ?? ""} onChange={(e) => set({ area: e.target.value })} aria-label={t("filter_area")}>
+      <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-2 sm:grid-cols-3">
+        <select className="input rounded-[3px] !py-2 text-[16px] sm:text-sm" value={params.get("area") ?? ""} onChange={(e) => set({ area: e.target.value })} aria-label={t("filter_area")}>
           <option value="">{t("all_areas")}</option>
           {areas.map((a) => (
             <option key={a.value} value={a.value}>
@@ -105,7 +105,7 @@ export function FilterBar({ areas, categories }: { areas: Option[]; categories: 
             </option>
           ))}
         </select>
-        <select className="input rounded-[3px] !py-2 text-sm" value={params.get("category") ?? ""} onChange={(e) => set({ category: e.target.value })} aria-label={t("filter_category")}>
+        <select className="input rounded-[3px] !py-2 text-[16px] sm:text-sm" value={params.get("category") ?? ""} onChange={(e) => set({ category: e.target.value })} aria-label={t("filter_category")}>
           <option value="">{t("all_categories")}</option>
           {categories.map((c) => (
             <option key={c.value} value={c.value}>
@@ -113,7 +113,7 @@ export function FilterBar({ areas, categories }: { areas: Option[]; categories: 
             </option>
           ))}
         </select>
-        <select className="input rounded-[3px] col-span-2 !py-2 text-sm sm:col-span-1" value={sort} onChange={(e) => set({ sort: e.target.value === "hot" ? "" : e.target.value })} aria-label={t("sort_by")}>
+        <select className="input rounded-[3px] min-[380px]:col-span-2 !py-2 text-[16px] sm:text-sm sm:col-span-1" value={sort} onChange={(e) => set({ sort: e.target.value === "hot" ? "" : e.target.value })} aria-label={t("sort_by")}>
           {SORTS.map((s) => (
             <option key={s.value} value={s.value}>
               {t(s.key)}

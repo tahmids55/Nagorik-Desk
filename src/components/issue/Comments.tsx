@@ -44,7 +44,7 @@ export function Comments({ issueId, comments, signedIn }: { issueId: string; com
   }, [state]);
 
   return (
-    <section className="rounded-[4px] border border-line bg-surface p-5" id="comments" aria-labelledby="comments-title">
+    <section className="rounded-[4px] border border-line bg-surface p-3.5 sm:p-5" id="comments" aria-labelledby="comments-title">
       <h2 id="comments-title" className="text-base font-semibold">
         {tn("comments", comments.length)}
       </h2>

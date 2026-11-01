@@ -71,12 +71,14 @@ export default async function AccountabilityPage() {
         <EmptyState icon={FileText} title={t("empty_scorecard_title")} body={t("empty_scorecard_body")} action={<Link href="/new" className="btn-primary rounded-[3px] font-medium">{t("report_first_issue")}</Link>} />
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-5">
             <Kpi icon={FileText} label={t("stat_reported")} value={n(overview.total)} />
             <Kpi icon={Hammer} label={t("stat_in_progress")} value={n(overview.inProgress)} />
             <Kpi icon={CheckCircle2} label={t("stat_solved")} value={n(overview.resolved)} tone="ok" />
             <Kpi icon={AlertTriangle} label={t("stat_overdue")} value={n(overview.overdue)} tone={overview.overdue > 0 ? "danger" : "default"} />
-            <Kpi icon={Timer} label={t("stat_median_days")} value={overview.medianDaysToResolve === null ? "–" : n(overview.medianDaysToResolve)} />
+            <div className="col-span-2 md:col-span-1">
+              <Kpi icon={Timer} label={t("stat_median_days")} value={overview.medianDaysToResolve === null ? "–" : n(overview.medianDaysToResolve)} />
+            </div>
           </div>
 
           {prios.length > 0 && (

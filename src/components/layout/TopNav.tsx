@@ -15,7 +15,7 @@ export async function TopNav() {
   const unread = session ? await unreadCount(session.user.id).catch(() => 0) : 0;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-surface">
+    <header className="sticky top-0 z-40 border-b border-line bg-surface pt-[env(safe-area-inset-top)]">
       <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-2 px-3 sm:px-4">
         <div className="flex shrink-0 items-center">
           <Logo />
@@ -37,7 +37,7 @@ export async function TopNav() {
           ) : (
             <>
               <LangToggle />
-              <ThemeToggle />
+              <ThemeToggle className="hidden sm:inline-flex" />
               <Link href="/login" className="btn-ghost btn-sm hidden sm:inline-flex">
                 {t("sign_in")}
               </Link>
