@@ -11,7 +11,7 @@ import { audit } from "../security/audit";
 import { rateLimit } from "../security/rate-limit";
 import { claimMedia } from "../services/media";
 import { addUpdate } from "../services/timeline";
-import { authorityUserIds, notify, officeUserIds, voterIds } from "../services/notify";
+import { authorityUserIds, followerIds, notify, officeUserIds, voterIds } from "../services/notify";
 import { invalidateReference } from "../queries/reference";
 import { fail, ok, type ActionResult } from "@/lib/action";
 import { DEADLINE_DAYS, LIMITS } from "@/lib/constants";
@@ -94,8 +94,9 @@ export async function triageIssue(_prev: FormState, formData: FormData): Promise
 
   if (typeof result === "string") return fail(result);
   const { issue, to, stakeholderId } = result;
-  const audience = new Set([issue.authorId, ...(action === "assign" || action === "reject" ? await voterIds(issue.id) : [])]);
-  await notify([...audience], "status", { issueId: issue.id, data: { to } }, undefined);
+  const [voters, followers] = await Promise.all([action === "assign" || action === "reject" ? voterIds(issue.id) : [], followerIds(issue.id)]);
+  const audience = new Set([issue.authorId, ...voters, ...followers]);
+  await notify([...audience], "status", { issueId: issue.id, data: { to }, exceptUserId: user.id });
   if (action === "assign" && stakeholderId) await notify(await authorityUserIds(stakeholderId), "assigned", { issueId: issue.id });
   revalidatePath(`/issues/${issue.id}`);
   revalidatePath("/office");
@@ -310,8 +311,9 @@ export async function authorityWork(_prev: FormState, formData: FormData): Promi
     await notify(await officeUserIds(), action === "refer_back" ? "referred_back" : "extension_requested", { issueId: issue.id });
   }
   if (action === "acknowledge" || action === "resolve" || action === "progress") {
-    const audience = action === "resolve" ? new Set([issue.authorId, ...(await voterIds(issue.id))]) : new Set([issue.authorId]);
-    await notify([...audience], action === "progress" ? "official_note" : "status", { issueId: issue.id, data: { to: to ?? issue.status } });
+    const [voters, followers] = await Promise.all([action === "resolve" ? voterIds(issue.id) : [], followerIds(issue.id)]);
+    const audience = new Set([issue.authorId, ...voters, ...followers]);
+    await notify([...audience], action === "progress" ? "official_note" : "status", { issueId: issue.id, data: { to: to ?? issue.status }, exceptUserId: user.id });
   }
   revalidatePath(`/issues/${issue.id}`);
   revalidatePath("/authority");

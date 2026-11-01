@@ -3,9 +3,10 @@
 import crypto from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
+import { z } from "zod";
 import { db } from "../db/client";
-import { areas, issues, notifications, users } from "../db/schema";
+import { areas, notifications, users } from "../db/schema";
 import { actionSession } from "../auth/guards";
 import { destroyAllSessions, destroyCurrentSession, getSession } from "../auth/session";
 import { hashPassword, verifyPassword } from "../auth/password";
@@ -14,9 +15,12 @@ import { rateLimit } from "../security/rate-limit";
 import { claimMedia } from "../services/media";
 import { consumeCode, issueCode } from "../services/codes";
 import { sendSms } from "../services/sms";
+import { unreadCount } from "../services/notify";
+import { listNotifications } from "../queries/notifications";
 import { features } from "../env";
 import { fail, ok, type ActionResult } from "@/lib/action";
 import { STAFF_ROLES } from "@/lib/constants";
+import type { NotificationItem } from "@/lib/notifications";
 import { normalizeBdPhone, profileSchema } from "@/lib/validation";
 import { getLang } from "@/i18n/server";
 import { makeT } from "@/i18n/translate";
@@ -110,44 +114,17 @@ export async function deleteAccount(_prev: FormState, formData: FormData): Promi
 
 // ───────────── Notifications ─────────────
 
-export type NotificationItem = {
-  id: string;
-  kind: string;
-  data: Record<string, string | number | null> | null;
-  issueId: string | null;
-  issueTitle: string | null;
-  createdAt: string;
-  readAt: string | null;
-};
-
 export async function fetchUserNotifications(): Promise<{ items: NotificationItem[]; unreadCount: number }> {
   const s = await getSession();
   if (!s) return { items: [], unreadCount: 0 };
-  const rows = await db()
-    .select({ n: notifications, title: issues.title })
-    .from(notifications)
-    .leftJoin(issues, eq(issues.id, notifications.issueId))
-    .where(eq(notifications.userId, s.user.id))
-    .orderBy(desc(notifications.createdAt))
-    .limit(30);
-
-  const items: NotificationItem[] = rows.map(({ n, title }) => ({
-    id: n.id,
-    kind: n.kind,
-    data: n.data as Record<string, string | number | null> | null,
-    issueId: n.issueId,
-    issueTitle: title,
-    createdAt: n.createdAt.toISOString(),
-    readAt: n.readAt ? n.readAt.toISOString() : null,
-  }));
-
-  const unreadCount = items.filter((i) => !i.readAt).length;
-  return { items, unreadCount };
+  const [items, unread] = await Promise.all([listNotifications(s.user.id, 30), unreadCount(s.user.id)]);
+  return { items, unreadCount: unread };
 }
 
 export async function markSingleNotificationRead(id: string): Promise<ActionResult> {
   const s = await getSession();
   if (!s) return fail("unauthenticated");
+  if (!z.string().uuid().safeParse(id).success) return fail("not_found");
   await db()
     .update(notifications)
     .set({ readAt: new Date() })

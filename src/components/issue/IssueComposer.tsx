@@ -287,13 +287,14 @@ export function IssueComposer({ apiKey, mapId, categories, areas, defaultUpazila
       </section>
 
       <FormAlert state={state} />
-      <div className="flex gap-3">
-        <SubmitButton className="flex-1 rounded-[3px]">{t("composer_submit")}</SubmitButton>
+      <p className="text-xs text-faint">{t("emergency_note")}</p>
+      {/* Phones: always within thumb reach while scrolling the form. */}
+      <div className="sticky bottom-0 z-20 -mx-4 flex gap-3 border-t border-line bg-surface/95 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur-md sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
         <Link href="/" className="btn-secondary rounded-[3px]">
           {t("cancel")}
         </Link>
+        <SubmitButton className="flex-1 rounded-[3px]">{t("composer_submit")}</SubmitButton>
       </div>
-      <p className="text-xs text-faint">{t("emergency_note")}</p>
     </form>
   );
 }

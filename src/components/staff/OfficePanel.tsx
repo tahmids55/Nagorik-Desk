@@ -32,7 +32,7 @@ export function OfficePanel({ issue, stakeholders, pendingExtension }: { issue: 
   const eligible = stakeholders.filter((s) => s.upazilaId === null || s.upazilaId === issue.upazilaId);
 
   return (
-    <section className="card rounded-[4px] shadow-none p-5" aria-labelledby="office-panel-title">
+    <section className="card rounded-[4px] p-3.5 shadow-none sm:p-5" aria-labelledby="office-panel-title">
       <h2 id="office-panel-title" className="flex items-center gap-2 text-base font-semibold">
         <Briefcase className="h-5 w-5 text-brand" aria-hidden="true" />
         {t("office_actions")}

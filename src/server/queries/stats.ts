@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { sql } from "drizzle-orm";
 import { db } from "../db/client";
 
@@ -18,7 +19,8 @@ export type Overview = {
   updatedAt: string;
 };
 
-export async function getOverview(): Promise<Overview> {
+/** Constituency totals. Memoised per request: the feed, its sidebar and the mobile strip share one query. */
+export const getOverview = cache(async (): Promise<Overview> => {
   const res = await db().execute(sql`
     select
       count(*)::int as total,
@@ -45,7 +47,7 @@ export async function getOverview(): Promise<Overview> {
     resolvedLast30: Number(r.resolved_30),
     updatedAt: new Date().toISOString(),
   };
-}
+});
 
 export type GroupRow = { key: string; total: number; resolved: number; open: number; active: number; overdue: number };
 
@@ -78,9 +80,7 @@ export type StakeholderRow = {
   reopened: number;
 };
 
-/** Office-level performance (never individual officials). Counts every issue ever assigned to the office. */
-export async function byStakeholder(): Promise<StakeholderRow[]> {
-  const res = await db().execute(sql`
+const stakeholderStats = (where: ReturnType<typeof sql>) => sql`
     select s.id, s.name_en, s.name_bn,
       count(i.id)::int as assigned,
       (count(i.id) filter (where i.status = 'resolved'))::int as resolved,
@@ -91,19 +91,32 @@ export async function byStakeholder(): Promise<StakeholderRow[]> {
       (count(i.id) filter (where i.reopen_count > 0))::int as reopened
     from nagorik_pg.stakeholders s
     left join nagorik_pg.issues i on i.stakeholder_id = s.id and ${visible}
-    where s.active
-    group by s.id order by assigned desc, s.name_en asc`);
-  return res.rows.map((r) => ({
-    id: String(r.id),
-    nameEn: String(r.name_en),
-    nameBn: r.name_bn === null ? null : String(r.name_bn),
-    assigned: Number(r.assigned),
-    resolved: Number(r.resolved),
-    overdue: Number(r.overdue),
-    medianDays: r.median_days === null ? null : Math.round(Number(r.median_days) * 10) / 10,
-    acknowledgedInTime: Number(r.ack_in_time),
-    reopened: Number(r.reopened),
-  }));
+    where ${where}
+    group by s.id order by assigned desc, s.name_en asc`;
+
+const toStakeholderRow = (r: Record<string, unknown>): StakeholderRow => ({
+  id: String(r.id),
+  nameEn: String(r.name_en),
+  nameBn: r.name_bn === null ? null : String(r.name_bn),
+  assigned: Number(r.assigned),
+  resolved: Number(r.resolved),
+  overdue: Number(r.overdue),
+  medianDays: r.median_days === null ? null : Math.round(Number(r.median_days) * 10) / 10,
+  acknowledgedInTime: Number(r.ack_in_time),
+  reopened: Number(r.reopened),
+});
+
+/** Office-level performance (never individual officials). Counts every issue ever assigned to the office. */
+export async function byStakeholder(): Promise<StakeholderRow[]> {
+  const res = await db().execute(stakeholderStats(sql`s.active`));
+  return res.rows.map(toStakeholderRow);
+}
+
+/** One office's public scorecard. Inactive offices keep their record. */
+export async function stakeholderScore(id: string): Promise<StakeholderRow | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+  const res = await db().execute(stakeholderStats(sql`s.id = ${id}`));
+  return res.rows[0] ? toStakeholderRow(res.rows[0]) : null;
 }
 
 export type PriorityRow = { id: string; title: string; status: string; commitment: string | null; targetDate: string | null; pastTarget: boolean; upazilaId: string };

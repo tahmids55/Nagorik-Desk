@@ -42,7 +42,7 @@ export function AuthorityPanel({ issue }: { issue: IssueCardDTO }) {
   if (actions.length === 0) return null;
 
   return (
-    <section className="card rounded-[4px] shadow-none p-5" aria-labelledby="auth-panel-title">
+    <section className="card rounded-[4px] p-3.5 shadow-none sm:p-5" aria-labelledby="auth-panel-title">
       <h2 id="auth-panel-title" className="flex items-center gap-2 text-base font-semibold">
         <Wrench className="h-5 w-5 text-brand" aria-hidden="true" />
         {t("authority_actions")}

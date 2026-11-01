@@ -6,6 +6,7 @@ import { loadFeed, type FeedItem } from "../queries/feed";
 import { rateLimit, ipKey } from "../security/rate-limit";
 import { getLang } from "@/i18n/server";
 import { SORTS } from "@/lib/constants";
+import { parseNear } from "@/lib/issue";
 
 const schema = z.object({
   q: z.string().max(80).optional(),
@@ -14,8 +15,10 @@ const schema = z.object({
   status: z.enum(["open", "progress", "resolved", "rejected", "overdue"]).optional(),
   urgent: z.boolean().optional(),
   sort: z.enum(SORTS).optional(),
+  near: z.object({ lat: z.number(), lng: z.number() }).optional(),
   authorId: z.string().uuid().optional(),
   votedBy: z.string().uuid().optional(),
+  stakeholderId: z.string().uuid().optional(),
   page: z.number().int().min(1).max(500),
 });
 
@@ -27,5 +30,8 @@ export async function loadMoreIssues(input: z.infer<typeof schema>): Promise<{ i
   const limited = await rateLimit(`feed:${session?.user.id ?? (await ipKey())}`, 120, 60);
   if (!limited.ok) return { items: [], hasMore: false };
   const viewer = session ? { id: session.user.id, role: session.user.role } : null;
-  return loadFeed({ ...parsed.data, includeAnonymousOfAuthor: true }, viewer, await getLang());
+  const { near: rawNear, ...rest } = parsed.data;
+  // Same bounds and rounding as the URL parameter.
+  const near = rawNear ? parseNear(`${rawNear.lat},${rawNear.lng}`) : null;
+  return loadFeed({ ...rest, near, sort: rest.sort === "near" && !near ? "hot" : rest.sort, includeAnonymousOfAuthor: true }, viewer, await getLang());
 }

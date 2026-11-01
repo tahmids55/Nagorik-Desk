@@ -36,7 +36,7 @@ export default async function OfficeIssues({ searchParams }: { searchParams: SP 
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold">{t("office_issues")}</h1>
 
-      <form className="card rounded-[4px] shadow-none grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-[1fr_170px_170px_190px_auto]" role="search">
+      <form className="card rounded-[4px] shadow-none grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_170px_170px_190px_auto]" role="search">
         <input name="q" defaultValue={f.q} className="input rounded-[3px]" placeholder={t("search_placeholder")} aria-label={t("search_placeholder")} maxLength={80} />
         <select name="status" defaultValue={f.status ?? ""} className="input rounded-[3px]" aria-label={t("filter_status")}>
           <option value="">{t("filter_all")}</option>

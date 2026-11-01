@@ -43,7 +43,7 @@ function pinIcon(L: typeof Leaflet, p: MapPinDTO, selected: boolean, lang: "en" 
   });
 }
 
-export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; categories: Named[]; areas: Named[] }) {
+export function MapView({ pins, categories, areas, focusId }: { pins: MapPinDTO[]; categories: Named[]; areas: Named[]; focusId?: string }) {
   const { t, lang } = useI18n();
   const { ref, map, L, style, setStyle } = useLeafletMap({ zoom: 10, upazilas: true });
   const [group, setGroup] = useState<(typeof GROUPS)[number]["key"]>("all");
@@ -127,6 +127,20 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
     cluster.addLayers(built);
     markers.current = next;
   }, [map, L, cluster, visible, lang]);
+
+  // `/map?focus=<id>` (from an issue page): select that report and bring it into view, once.
+  const focused = useRef(false);
+  useEffect(() => {
+    if (!focusId || focused.current || !map || !cluster) return;
+    const p = pinById.get(focusId);
+    if (!p) return;
+    focused.current = true;
+    setSelected(p.id);
+    setMobileView("map");
+    const m = markers.current.get(p.id);
+    if (m) cluster.zoomToShowLayer(m);
+    else map.setView([p.lat, p.lng], 15);
+  }, [focusId, map, cluster, pinById, visible]);
 
   // Reflect the selection on the marker.
   const prevSelected = useRef<string | null>(null);
@@ -237,11 +251,28 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
     </ul>
   );
 
+  const viewToggle = (
+    <div className="flex shrink-0 overflow-hidden rounded-[3px] border border-line md:hidden" role="group" aria-label={t("map_view_toggle")}>
+      {(["map", "list"] as const).map((v) => (
+        <button
+          key={v}
+          type="button"
+          onClick={() => setMobileView(v)}
+          aria-pressed={mobileView === v}
+          className={cn("flex min-h-[36px] items-center gap-1.5 px-2.5 text-xs font-semibold", mobileView === v ? "bg-ink text-surface" : "bg-surface text-muted")}
+        >
+          {v === "map" ? <MapIcon className="h-3.5 w-3.5" aria-hidden="true" /> : <List className="h-3.5 w-3.5" aria-hidden="true" />}
+          <span className="hidden min-[360px]:inline">{t(v === "map" ? "nav_map" : "map_list")}</span>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
-    <div className="flex h-[calc(100dvh-3.5rem-4.5rem)] min-h-[440px] flex-col md:h-[calc(100vh-3.5rem)]">
-      {/* Filters */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-line bg-surface px-3 py-2.5 sm:px-4">
-        <div className="scroll-thin flex gap-1.5 overflow-x-auto" role="group" aria-label={t("filter_status")}>
+    <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] min-h-[420px] flex-col md:h-[calc(100dvh-3.5rem)]">
+      {/* Filters: two compact rows on phones, one row from tablets up */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-line bg-surface px-3 py-2 sm:px-4 sm:py-2.5">
+        <div className="scroll-thin -mx-1 flex min-w-0 flex-1 gap-1.5 overflow-x-auto px-1 py-0.5 [scrollbar-width:none] md:flex-none" role="group" aria-label={t("filter_status")}>
           {GROUPS.map((g) => (
             <button
               key={g.key}
@@ -249,54 +280,42 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
               aria-pressed={group === g.key}
               onClick={() => setGroup(g.key)}
               className={cn(
-                "shrink-0 rounded-[3px] border px-3 py-1.5 text-[13px] font-medium transition-colors",
-                group === g.key
-                  ? "border-ink bg-ink text-surface"
-                  : "border-line bg-surface text-ink-secondary hover:border-line-strong hover:text-ink"
+                "min-h-[36px] shrink-0 rounded-[3px] border px-3 py-1.5 text-xs font-medium transition-colors active:scale-95 sm:text-[13px]",
+                group === g.key ? "border-ink bg-ink text-surface" : "border-line bg-surface text-ink-secondary hover:border-line-strong hover:text-ink",
               )}
             >
               {t(g.key === "all" ? "filter_all" : g.key === "open" ? "filter_open" : g.key === "progress" ? "filter_progress" : "filter_resolved")}
             </button>
           ))}
         </div>
-        <select className="input rounded-[3px] !w-auto !py-1.5 text-sm" value={area} onChange={(e) => setArea(e.target.value)} aria-label={t("filter_area")}>
-          <option value="">{t("all_areas")}</option>
-          {areas.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.name}
-            </option>
-          ))}
-        </select>
-        <select className="input rounded-[3px] !w-auto !py-1.5 text-sm" value={category} onChange={(e) => setCategory(e.target.value)} aria-label={t("filter_category")}>
-          <option value="">{t("all_categories")}</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <p className="ml-auto hidden text-xs text-muted sm:block" aria-live="polite">
+        {viewToggle}
+        <div className="flex w-full gap-2 md:w-auto">
+          <select className="input min-w-0 flex-1 rounded-[3px] !py-1.5 text-[16px] sm:text-sm md:!w-auto md:flex-none" value={area} onChange={(e) => setArea(e.target.value)} aria-label={t("filter_area")}>
+            <option value="">{t("all_areas")}</option>
+            {areas.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.name}
+              </option>
+            ))}
+          </select>
+          <select className="input min-w-0 flex-1 rounded-[3px] !py-1.5 text-[16px] sm:text-sm md:!w-auto md:flex-none" value={category} onChange={(e) => setCategory(e.target.value)} aria-label={t("filter_category")}>
+            <option value="">{t("all_categories")}</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <p className="ml-auto hidden text-xs text-muted md:block" aria-live="polite">
           {t("map_showing", { n: formatNumber(visible.length, lang) })}
         </p>
-        <div className="flex rounded-[3px] border border-line md:hidden" role="group">
-          {(["map", "list"] as const).map((v) => (
-            <button
-              key={v}
-              type="button"
-              onClick={() => setMobileView(v)}
-              aria-pressed={mobileView === v}
-              className={cn("flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold", mobileView === v ? "bg-ink text-surface" : "text-muted")}
-            >
-              {v === "map" ? <MapIcon className="h-3.5 w-3.5" aria-hidden="true" /> : <List className="h-3.5 w-3.5" aria-hidden="true" />}
-              {t(v === "map" ? "nav_map" : "map_list")}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="relative flex min-h-0 flex-1">
         {/* Map area */}
-        <div ref={shellRef} className={cn("relative min-w-0 flex-1", mobileView === "list" && "hidden md:block")}>
+        {/* `isolate` keeps Leaflet's own z-indexes (400-1000) from painting over the header's menus. */}
+        <div ref={shellRef} className={cn("relative isolate min-w-0 flex-1", mobileView === "list" && "hidden md:block")}>
           <div ref={ref} className="h-full w-full" role="application" aria-label={t("map_aria")} />
           {!map && <div className="pointer-events-none absolute inset-0 z-[1000] flex items-center justify-center bg-bg/60 text-sm text-muted">{t("map_loading")}</div>}
 
@@ -335,15 +354,23 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
           )}
 
           {current && (
-            <div className="rounded-[4px] border border-line bg-surface shadow-popover absolute bottom-3 left-3 right-3 z-[1050] p-3.5 sm:p-4 sm:right-auto sm:w-[360px]" role="dialog" aria-label={current.title}>
-              <button type="button" className="absolute right-2 top-2 rounded-[3px] p-1 text-muted hover:bg-raised" onClick={() => setSelected(null)} aria-label={t("close")}>
+            <div className="absolute bottom-3 left-3 right-3 z-[1050] animate-pop-in rounded-[4px] border border-line bg-surface p-3.5 shadow-popover sm:right-auto sm:w-[360px] sm:p-4" role="dialog" aria-label={current.title}>
+              <button type="button" className="absolute right-1.5 top-1.5 flex h-9 w-9 items-center justify-center rounded-[3px] text-muted hover:bg-raised" onClick={() => setSelected(null)} aria-label={t("close")}>
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
-              <StatusChip status={current.status} />
-              <p className="mt-2 pr-5 text-[15px] font-semibold leading-snug" data-ugc>
-                {current.title}
-              </p>
-              <p className="mt-1 text-xs text-muted">
+              <div className="flex gap-3 pr-7">
+                {current.imageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={current.imageUrl} alt="" className="h-14 w-14 shrink-0 rounded-[3px] border border-line bg-neutral-fill object-cover" />
+                )}
+                <div className="min-w-0">
+                  <StatusChip status={current.status} />
+                  <p className="mt-1.5 line-clamp-2 text-[15px] font-semibold leading-snug" data-ugc>
+                    {current.title}
+                  </p>
+                </div>
+              </div>
+              <p className="mt-1.5 text-xs text-muted">
                 {catName.get(current.categoryId)} · {areaName.get(current.upazilaId)}
                 {!current.precise && ` · ${t("approximate")}`}
               </p>
@@ -361,7 +388,7 @@ export function MapView({ pins, categories, areas }: { pins: MapPinDTO[]; catego
         </div>
 
         {/* Side list */}
-        <aside className={cn("scroll-thin w-full shrink-0 overflow-y-auto border-l border-line bg-surface md:block md:w-[340px] pb-16 md:pb-0", mobileView === "map" ? "hidden" : "block")} aria-label={t("map_list_label")}>
+        <aside className={cn("scroll-thin w-full shrink-0 overflow-y-auto overscroll-contain border-l border-line bg-surface md:block md:w-[340px]", mobileView === "map" ? "hidden" : "block")} aria-label={t("map_list_label")}>
           {list}
         </aside>
       </div>

@@ -23,7 +23,7 @@ export default async function RegisterPage({ searchParams }: { searchParams: { n
       </div>
       <p className="mt-6 text-sm text-muted">
         {t("have_account")}{" "}
-        <Link href="/login" className="link font-semibold">
+        <Link href={`/login${next ? `?next=${encodeURIComponent(next)}` : ""}`} className="link font-semibold">
           {t("sign_in")}
         </Link>
       </p>

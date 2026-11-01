@@ -2,12 +2,17 @@
 
 import { Check, Facebook, Link2, MessageCircle, MoreHorizontal, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Dialog, menuItemClass } from "@/components/ui/Dialog";
+import { useDismiss } from "@/hooks/useDismiss";
+import { useIsPhone } from "@/hooks/useMediaQuery";
 import { useI18n } from "@/i18n/client";
+import { absoluteUrl, copyText } from "@/lib/clipboard";
+import { cn } from "@/lib/cn";
 
-const itemClass = "flex w-full items-center gap-2.5 rounded-[3px] px-3 py-2 text-left text-[13px] font-medium text-ink transition-colors hover:bg-neutral-fill focus-visible:bg-neutral-fill focus-visible:outline-none";
-
-export function ShareMenu({ path, title }: { path: string; title: string }) {
+/** WhatsApp, Facebook, copy link and the system share sheet. A bottom sheet on phones, a popover elsewhere. */
+export function ShareMenu({ path, title, showLabel = false, className }: { path: string; title: string; showLabel?: boolean; className?: string }) {
   const { t } = useI18n();
+  const phone = useIsPhone();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [canNativeShare, setCanNativeShare] = useState(false);
@@ -17,33 +22,19 @@ export function ShareMenu({ path, title }: { path: string; title: string }) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => () => {
-    if (copyTimer.current) clearTimeout(copyTimer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+    },
+    [],
+  );
 
-  useEffect(() => {
-    if (!open) return;
-    const onPointer = (e: PointerEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
-    };
-    document.addEventListener("pointerdown", onPointer);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onPointer);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
+  useDismiss(open && !phone, () => setOpen(false), rootRef);
 
   function toggle() {
     if (!open) {
-      // Absolute URL is resolved at open time to avoid SSR/client mismatch.
-      setUrl(`${window.location.origin}${path}`);
+      // Absolute URL is resolved at open time to avoid an SSR/client mismatch.
+      setUrl(absoluteUrl(path));
       // Keep the 13rem popover inside the viewport: align to whichever edge has room.
       const rect = triggerRef.current?.getBoundingClientRect();
       if (rect) setAlignRight(rect.left + 208 > window.innerWidth - 8);
@@ -53,75 +44,88 @@ export function ShareMenu({ path, title }: { path: string; title: string }) {
   }
 
   async function copy() {
-    const link = url || `${window.location.origin}${path}`;
-    let ok = false;
-    try {
-      await navigator.clipboard.writeText(link);
-      ok = true;
-    } catch {
-      try {
-        const ta = document.createElement("textarea");
-        ta.value = link;
-        ta.setAttribute("readonly", "");
-        ta.style.position = "fixed";
-        ta.style.opacity = "0";
-        document.body.appendChild(ta);
-        ta.select();
-        ok = document.execCommand("copy");
-        document.body.removeChild(ta);
-      } catch {
-        ok = false;
-      }
-    }
-    if (!ok) return;
+    if (!(await copyText(url || absoluteUrl(path)))) return;
     setCopied(true);
     if (copyTimer.current) clearTimeout(copyTimer.current);
     copyTimer.current = setTimeout(() => {
       setCopied(false);
       setOpen(false);
-    }, 2000);
+    }, 1500);
   }
 
   async function nativeShare() {
     try {
-      await navigator.share({ title, url: url || `${window.location.origin}${path}` });
+      await navigator.share({ title, url: url || absoluteUrl(path) });
     } catch {
       /* user dismissed the sheet */
     }
     setOpen(false);
   }
 
-  const encodedUrl = encodeURIComponent(url);
   const whatsapp = `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`;
-  const facebook = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+  const facebook = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+
+  const items = (
+    <>
+      {canNativeShare && phone && (
+        <button type="button" role="menuitem" onClick={nativeShare} className={menuItemClass}>
+          <Share2 className="h-[18px] w-[18px] shrink-0 text-muted" aria-hidden="true" />
+          {t("share_more")}
+        </button>
+      )}
+      <a role="menuitem" href={whatsapp} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className={menuItemClass}>
+        <MessageCircle className="h-[18px] w-[18px] shrink-0 text-muted" aria-hidden="true" />
+        {t("share_whatsapp")}
+      </a>
+      <a role="menuitem" href={facebook} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className={menuItemClass}>
+        <Facebook className="h-[18px] w-[18px] shrink-0 text-muted" aria-hidden="true" />
+        {t("share_facebook")}
+      </a>
+      <button type="button" role="menuitem" onClick={copy} className={menuItemClass}>
+        {copied ? <Check className="h-[18px] w-[18px] shrink-0 text-ok" aria-hidden="true" /> : <Link2 className="h-[18px] w-[18px] shrink-0 text-muted" aria-hidden="true" />}
+        <span aria-live="polite" className={cn(copied && "text-ok")}>
+          {copied ? t("link_copied") : t("share_copy_link")}
+        </span>
+      </button>
+      {canNativeShare && !phone && (
+        <button type="button" role="menuitem" onClick={nativeShare} className={menuItemClass}>
+          <MoreHorizontal className="h-[18px] w-[18px] shrink-0 text-muted" aria-hidden="true" />
+          {t("share_more")}
+        </button>
+      )}
+    </>
+  );
 
   return (
-    <div ref={rootRef} className="relative">
-      <button ref={triggerRef} type="button" onClick={toggle} className="btn-ghost btn-sm h-9 min-h-[36px] px-2.5 rounded-[3px] active:scale-95" aria-label={t("share")} aria-haspopup="menu" aria-expanded={open}>
+    <div ref={rootRef} className={cn("relative", className)}>
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={toggle}
+        className="btn-ghost btn-sm h-9 min-h-[36px] rounded-[3px] px-2.5 active:scale-95"
+        aria-label={t("share")}
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
         <Share2 className="h-[18px] w-[18px]" aria-hidden="true" />
-        <span className="hidden sm:inline">{copied ? t("link_copied") : t("share")}</span>
+        <span className={cn(!showLabel && "hidden sm:inline")}>{copied ? t("link_copied") : t("share")}</span>
       </button>
-      {open && (
-        <div role="menu" aria-label={t("share")} className={`absolute bottom-full z-30 mb-1.5 w-48 sm:w-52 max-w-[calc(100vw-2rem)] rounded-[4px] border border-line bg-surface p-1 shadow-popover left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto ${alignRight ? "sm:right-0" : "sm:left-0"}`}>
-          <a role="menuitem" href={whatsapp} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className={itemClass}>
-            <MessageCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-            {t("share_whatsapp")}
-          </a>
-          <a role="menuitem" href={facebook} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className={itemClass}>
-            <Facebook className="h-4 w-4 shrink-0" aria-hidden="true" />
-            {t("share_facebook")}
-          </a>
-          <button type="button" role="menuitem" onClick={copy} className={itemClass}>
-            {copied ? <Check className="h-4 w-4 shrink-0 text-brand" aria-hidden="true" /> : <Link2 className="h-4 w-4 shrink-0" aria-hidden="true" />}
-            <span aria-live="polite">{copied ? t("link_copied") : t("share_copy_link")}</span>
-          </button>
-          {canNativeShare && (
-            <button type="button" role="menuitem" onClick={nativeShare} className={itemClass}>
-              <MoreHorizontal className="h-4 w-4 shrink-0" aria-hidden="true" />
-              {t("share_more")}
-            </button>
-          )}
-        </div>
+      {phone ? (
+        <Dialog open={open} onClose={() => setOpen(false)} title={t("share")}>
+          <div role="menu" aria-label={t("share")} className="px-2 pb-3">
+            {items}
+          </div>
+        </Dialog>
+      ) : (
+        open && (
+          <div
+            role="menu"
+            aria-label={t("share")}
+            className={cn("absolute bottom-full z-30 mb-1.5 w-52 animate-pop-in rounded-[4px] border border-line bg-surface p-1 shadow-popover", alignRight ? "right-0" : "left-0")}
+          >
+            {items}
+          </div>
+        )
       )}
     </div>
   );

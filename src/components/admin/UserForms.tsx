@@ -16,7 +16,7 @@ export function RoleForm({ userId, role, stakeholderId, officeTitle, offices }: 
       {(state) => (
         <>
           <input type="hidden" name="userId" value={userId} />
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div>
               <label className="label">{t("role")}</label>
               <select name="role" className="input rounded-[3px]" value={selected} onChange={(e) => setSelected(e.target.value)}>

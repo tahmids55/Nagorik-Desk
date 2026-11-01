@@ -1,7 +1,7 @@
 import "server-only";
 import { and, eq, sql } from "drizzle-orm";
 import { db, type Tx } from "../db/client";
-import { notifications, users, votes } from "../db/schema";
+import { bookmarks, notifications, users, votes } from "../db/schema";
 
 export type NotifKind =
   | "comment"
@@ -58,6 +58,16 @@ export async function voterIds(issueId: string, onlyUpvoters = true, tx?: Tx): P
     .select({ id: votes.userId })
     .from(votes)
     .where(onlyUpvoters ? and(eq(votes.issueId, issueId), eq(votes.value, 1)) : eq(votes.issueId, issueId))
+    .limit(5000);
+  return rows.map((r) => r.id);
+}
+
+/** People who saved the issue: saving a report means following its progress. */
+export async function followerIds(issueId: string, tx?: Tx): Promise<string[]> {
+  const rows = await (tx ?? db())
+    .select({ id: bookmarks.userId })
+    .from(bookmarks)
+    .where(eq(bookmarks.issueId, issueId))
     .limit(5000);
   return rows.map((r) => r.id);
 }

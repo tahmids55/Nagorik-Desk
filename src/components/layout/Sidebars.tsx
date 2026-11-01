@@ -1,10 +1,10 @@
 import { Bell, Bookmark, Briefcase, FileText, Landmark, MapPin, Settings, Shield, Wrench } from "lucide-react";
 import Link from "next/link";
+import { TopContributors } from "@/components/stats/TopContributors";
 import { Avatar } from "@/components/ui/Avatar";
 import { getT } from "@/i18n/server";
 import { formatNumber } from "@/i18n/translate";
 import { getSession } from "@/server/auth/session";
-import { getTopContributors } from "@/server/queries/leaderboard";
 import { getOverview } from "@/server/queries/stats";
 import { areaName, getAreas } from "@/server/queries/reference";
 
@@ -80,11 +80,7 @@ export async function SidebarLeft() {
 }
 
 export async function SidebarRight() {
-  const [{ t, lang }, o, contributors] = await Promise.all([
-    getT(),
-    getOverview(),
-    getTopContributors(5).catch(() => []),
-  ]);
+  const [{ t, lang }, o] = await Promise.all([getT(), getOverview()]);
   const n = (v: number) => formatNumber(v, lang);
   return (
     <div className="space-y-4">
@@ -127,26 +123,9 @@ export async function SidebarRight() {
           {t("top_contributors")}
         </h2>
         <p className="mt-0.5 text-xs text-muted">{t("contributors_hint")}</p>
-        {contributors.length === 0 ? (
-          <p className="mt-3 text-sm text-muted">{t("contributors_empty")}</p>
-        ) : (
-          <ol className="mt-3 space-y-2.5">
-            {contributors.map((c, i) => (
-              <li key={c.id} className="flex items-center gap-3">
-                <span className="w-4 shrink-0 text-center text-xs font-medium text-muted">{n(i + 1)}</span>
-                <Link href={`/u/${c.id}`} className="flex min-w-0 flex-1 items-center gap-2.5 rounded-[3px] hover:bg-neutral-fill">
-                  <Avatar name={c.name} mediaId={c.avatarMediaId} size="sm" />
-                  <span className="min-w-0">
-                    <span className="block truncate text-sm font-medium">{c.name}</span>
-                    <span className="block text-xs text-muted">
-                      {t("contributor_stats", { issues: n(c.issues), resolved: n(c.resolved), votes: n(c.votes) })}
-                    </span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ol>
-        )}
+        <div className="mt-3">
+          <TopContributors limit={5} />
+        </div>
       </section>
 
       {/* Facebook-style sticky sidebar footer */}

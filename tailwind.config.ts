@@ -96,6 +96,16 @@ const config: Config = {
       boxShadow: {
         popover: "0 4px 12px rgba(0, 0, 0, 0.08)",
       },
+      keyframes: {
+        "fade-in": { from: { opacity: "0" }, to: { opacity: "1" } },
+        "pop-in": { from: { opacity: "0", transform: "scale(0.97)" }, to: { opacity: "1", transform: "scale(1)" } },
+        "sheet-up": { from: { transform: "translateY(100%)" }, to: { transform: "translateY(0)" } },
+      },
+      animation: {
+        "fade-in": "fade-in 150ms ease-out",
+        "pop-in": "pop-in 140ms ease-out",
+        "sheet-up": "sheet-up 240ms cubic-bezier(0.2, 0.8, 0.2, 1)",
+      },
     },
   },
   plugins: [],

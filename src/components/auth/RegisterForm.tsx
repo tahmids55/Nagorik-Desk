@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useFormState } from "react-dom";
 import { FieldError, FormAlert, SubmitButton } from "@/components/ui/forms";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useI18n } from "@/i18n/client";
 import { LIMITS } from "@/lib/constants";
 import { register } from "@/server/actions/auth";
@@ -38,7 +39,7 @@ export function RegisterForm({ areas, next }: { areas: AreaOption[]; next?: stri
         <label htmlFor="password" className="label">
           {t("password")}
         </label>
-        <input id="password" name="password" type="password" autoComplete="new-password" required minLength={LIMITS.passwordMin} className="input" />
+        <PasswordInput id="password" name="password" autoComplete="new-password" required minLength={LIMITS.passwordMin} />
         <p className="hint">{t("password_hint", { n: LIMITS.passwordMin })}</p>
         <FieldError state={state} name="password" />
       </div>

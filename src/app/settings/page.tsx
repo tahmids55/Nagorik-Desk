@@ -9,13 +9,14 @@ import { users } from "@/server/db/schema";
 import { features } from "@/server/env";
 import { areaName, getAreas } from "@/server/queries/reference";
 import { eq } from "drizzle-orm";
-import { LangToggle } from "@/components/layout/LangToggle";
+import { LangChooser } from "@/components/layout/LangToggle";
+import { ThemeChooser } from "@/components/layout/ThemeToggle";
 
 export const metadata: Metadata = { title: "Settings", robots: { index: false } };
 
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
-    <section className="card rounded-[4px] shadow-none p-5 sm:p-6">
+    <section className="card rounded-[4px] p-4 shadow-none sm:p-6">
       <h2 className="text-lg font-semibold">{title}</h2>
       {hint && <p className="mt-1 text-sm text-muted">{hint}</p>}
       <div className="mt-5">{children}</div>
@@ -31,8 +32,8 @@ export default async function SettingsPage() {
   const isStaff = STAFF_ROLES.includes(user.role);
 
   return (
-    <div className="mx-auto max-w-[720px] space-y-4 px-3 py-6 sm:px-4">
-      <h1 className="text-2xl font-semibold">{t("settings")}</h1>
+    <div className="mx-auto max-w-[720px] space-y-3 px-3 py-5 sm:space-y-4 sm:px-4 sm:py-6">
+      <h1 className="text-xl font-semibold sm:text-2xl">{t("settings")}</h1>
 
       <Section title={t("settings_profile")}>
         <ProfileForm
@@ -50,10 +51,11 @@ export default async function SettingsPage() {
       </Section>
 
       <Section title={t("settings_language")}>
-        <div className="flex items-center gap-3">
-          <LangToggle variant="icon" />
-          <span className="text-sm text-muted">{lang === "bn" ? "বাংলা" : "English"}</span>
-        </div>
+        <LangChooser />
+      </Section>
+
+      <Section title={t("settings_appearance")}>
+        <ThemeChooser />
       </Section>
 
       <Section title={t("settings_security")}>

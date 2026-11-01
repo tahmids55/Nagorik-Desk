@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { Avatar } from "@/components/ui/Avatar";
 import { FieldError, FormAlert, FormSuccess, SubmitButton, useErrorText } from "@/components/ui/forms";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { ImageUploader } from "@/components/ui/ImageUploader";
 import { useI18n } from "@/i18n/client";
 import { cn } from "@/lib/cn";
@@ -183,12 +184,12 @@ export function PasswordForm() {
     <form action={action} className="space-y-4" noValidate>
       <div>
         <label htmlFor="current" className="label">{t("current_password")}</label>
-        <input id="current" name="current" type="password" autoComplete="current-password" required className="input rounded-[3px]" />
+        <PasswordInput id="current" name="current" autoComplete="current-password" required className="rounded-[3px]" />
         <FieldError state={state} name="current" />
       </div>
       <div>
         <label htmlFor="new-password" className="label">{t("new_password")}</label>
-        <input id="new-password" name="password" type="password" autoComplete="new-password" required minLength={LIMITS.passwordMin} className="input rounded-[3px]" />
+        <PasswordInput id="new-password" name="password" autoComplete="new-password" required minLength={LIMITS.passwordMin} className="rounded-[3px]" />
         <p className="hint">{t("password_hint", { n: LIMITS.passwordMin })}</p>
         <FieldError state={state} name="password" />
       </div>
@@ -224,7 +225,7 @@ export function DeleteAccountForm() {
       <p className="text-sm text-muted">{t("delete_account_warning")}</p>
       <div>
         <label htmlFor="del-password" className="label">{t("confirm_with_password")}</label>
-        <input id="del-password" name="password" type="password" autoComplete="current-password" required className="input rounded-[3px]" />
+        <PasswordInput id="del-password" name="password" autoComplete="current-password" required className="rounded-[3px]" />
         <FieldError state={state} name="password" />
       </div>
       <FormAlert state={state} />

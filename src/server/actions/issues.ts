@@ -10,7 +10,7 @@ import { rateLimit } from "../security/rate-limit";
 import { audit } from "../security/audit";
 import { claimMedia } from "../services/media";
 import { addUpdate } from "../services/timeline";
-import { authorityUserIds, notify, officeUserIds } from "../services/notify";
+import { authorityUserIds, followerIds, notify, officeUserIds } from "../services/notify";
 import { findSimilar, getComments, type SimilarDTO } from "../queries/issues";
 import { getAreas, getCategories } from "../queries/reference";
 import { getSession } from "../auth/session";
@@ -219,7 +219,7 @@ export async function addComment(_prev: FormState, formData: FormData): Promise<
   });
   if (!outcome) return fail("not_found");
 
-  await notify([outcome.authorId], "comment", { issueId, data: { name: user.name } }, undefined);
+  await notify([outcome.authorId], "comment", { issueId, data: { name: user.name }, exceptUserId: user.id });
   revalidatePath(`/issues/${issueId}`);
   return ok();
 }
@@ -292,8 +292,12 @@ export async function confirmFix(issueId: string): Promise<ActionResult> {
     return i;
   });
   if (!done) return fail("not_allowed");
-  if (done.stakeholderId) await notify(await authorityUserIds(done.stakeholderId), "status", { issueId, data: { to: "confirmed" } });
-  await notify(await officeUserIds(), "status", { issueId, data: { to: "confirmed" } });
+  const [authority, office, followers] = await Promise.all([
+    done.stakeholderId ? authorityUserIds(done.stakeholderId) : [],
+    officeUserIds(),
+    followerIds(issueId),
+  ]);
+  await notify([...authority, ...office, ...followers], "status", { issueId, data: { to: "confirmed" }, exceptUserId: user.id });
   revalidatePath(`/issues/${issueId}`);
   return ok();
 }
@@ -335,8 +339,12 @@ export async function stillAProblem(issueId: string, noteInput: string): Promise
     return i;
   });
   if (typeof res === "string") return fail(res);
-  if (res.stakeholderId) await notify(await authorityUserIds(res.stakeholderId), "reopened", { issueId });
-  await notify(await officeUserIds(), "reopened", { issueId });
+  const [authority, office, followers] = await Promise.all([
+    res.stakeholderId ? authorityUserIds(res.stakeholderId) : [],
+    officeUserIds(),
+    followerIds(issueId),
+  ]);
+  await notify([...authority, ...office, ...followers], "reopened", { issueId, exceptUserId: user.id });
   revalidatePath(`/issues/${issueId}`);
   return ok();
 }

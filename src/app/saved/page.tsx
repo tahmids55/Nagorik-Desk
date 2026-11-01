@@ -42,10 +42,12 @@ export default async function SavedPage() {
   const items = await decorate(ordered, lang);
 
   return (
-    <div className="mx-auto w-full max-w-[680px] space-y-4 px-3 pt-4 sm:px-4">
+    <div className="mx-auto w-full max-w-[680px] space-y-3 px-3 py-4 sm:space-y-4 sm:px-4 sm:py-6">
       <header>
-        <h1 className="text-2xl font-semibold">{t("saved_title")}</h1>
-        <p className="mt-1 text-sm text-muted">{t("saved_intro")}</p>
+        <h1 className="text-xl font-semibold sm:text-2xl">{t("saved_title")}</h1>
+        <p className="mt-1 text-sm text-muted">
+          {t("saved_intro")} {t("saved_follow_note")}
+        </p>
       </header>
 
       {items.length === 0 ? (

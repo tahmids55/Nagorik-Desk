@@ -27,6 +27,8 @@ export type FeedFilters = {
   /** Only issues this user upvoted (callers must make sure it is the viewer) */
   votedBy?: string;
   ids?: string[];
+  /** Viewer position for the "near me" sort (rounded to about 100 m by the caller) */
+  near?: { lat: number; lng: number } | null;
 };
 
 export type Viewer = { id: string; role: Role } | null;
@@ -73,7 +75,15 @@ function whereFor(f: FeedFilters, viewer: Viewer): SQL | undefined {
   return and(...c);
 }
 
-function orderFor(sort: Sort): SQL[] {
+function orderFor(sort: Sort, near?: FeedFilters["near"]): SQL[] {
+  if (sort === "near" && near) {
+    // Equirectangular approximation: plenty accurate inside one constituency, and index-free.
+    const k = Math.cos((near.lat * Math.PI) / 180);
+    return [
+      asc(sql`power(${issues.lat} - ${near.lat}, 2) + power((${issues.lng} - ${near.lng}) * ${k}, 2)`),
+      desc(issues.createdAt),
+    ];
+  }
   switch (sort) {
     case "new":
       return [desc(issues.createdAt)];
@@ -98,7 +108,7 @@ type Row = {
   stakeholder: { id: string; nameEn: string; nameBn: string | null } | null;
 };
 
-async function hydrate(rows: Row[], viewer: Viewer): Promise<IssueCardDTO[]> {
+async function hydrate(rows: Row[], viewer: Viewer, near?: FeedFilters["near"]): Promise<IssueCardDTO[]> {
   if (rows.length === 0) return [];
   const ids = rows.map((r) => r.issue.id);
 
@@ -165,6 +175,7 @@ async function hydrate(rows: Row[], viewer: Viewer): Promise<IssueCardDTO[]> {
       saved: savedIds.has(i.id),
       images: imgs.get(i.id) ?? [],
       hidden: i.hiddenAt !== null,
+      ...(near ? { distanceM: Math.round(haversineMeters(near, i)) } : {}),
     };
   });
 }
@@ -189,13 +200,27 @@ const baseSelect = () =>
 export async function listIssues(f: FeedFilters, viewer: Viewer): Promise<{ items: IssueCardDTO[]; hasMore: boolean }> {
   const page = Math.max(1, Math.min(f.page ?? 1, 500));
   const size = LIMITS.pageSize;
+  const near = f.sort === "near" ? f.near : null;
   const rows = await baseSelect()
     .where(whereFor(f, viewer))
-    .orderBy(...orderFor(f.sort ?? "hot"))
+    .orderBy(...orderFor(f.sort ?? "hot", near))
     .limit(size + 1)
     .offset((page - 1) * size);
-  const items = await hydrate(rows.slice(0, size), viewer);
+  const items = await hydrate(rows.slice(0, size), viewer, near);
   return { items, hasMore: rows.length > size };
+}
+
+/** Resolve a public reference number (PG-00042) to the issue id, if the viewer may see it. */
+export async function findIssueIdBySeq(seq: number, viewer: Viewer): Promise<string | null> {
+  if (!Number.isSafeInteger(seq) || seq < 1) return null;
+  const [row] = await db()
+    .select({ id: issues.id, authorId: issues.authorId, hiddenAt: issues.hiddenAt })
+    .from(issues)
+    .where(eq(issues.seq, seq))
+    .limit(1);
+  if (!row) return null;
+  if (row.hiddenAt && !(viewer && (viewer.id === row.authorId || viewer.role === "admin"))) return null;
+  return row.id;
 }
 
 /** Single issue. Hidden issues are only visible to their author and to admins. */

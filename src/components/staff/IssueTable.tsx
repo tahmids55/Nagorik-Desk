@@ -5,6 +5,7 @@ import { TimeAgo } from "@/components/ui/TimeAgo";
 import { getT } from "@/i18n/server";
 import { formatNumber } from "@/i18n/translate";
 import { formatDate } from "@/lib/format";
+import { refCode } from "@/lib/issue";
 import type { IssueStatus } from "@/lib/constants";
 import type { StaffRow } from "@/server/queries/staff";
 import { areaName, getAreas, getCategories } from "@/server/queries/reference";
@@ -22,7 +23,7 @@ export async function IssueTable({ rows, showOffice = true }: { rows: StaffRow[]
     <ul className="card rounded-[4px] shadow-none divide-y divide-line overflow-hidden">
       {rows.map((r) => (
         <li key={r.id}>
-          <Link href={`/issues/${r.id}`} className="grid gap-x-4 gap-y-1.5 px-4 py-3 hover:bg-raised md:grid-cols-[1fr_auto]">
+          <Link href={`/issues/${r.id}`} className="grid grid-cols-1 gap-x-4 gap-y-1.5 px-4 py-3 hover:bg-raised md:grid-cols-[minmax(0,1fr)_auto]">
             <div className="min-w-0">
               <p className="flex items-center gap-1.5 text-[15px] font-semibold">
                 {r.mpPriority && <Star className="h-4 w-4 shrink-0 text-brand" fill="currentColor" aria-label={t("mp_priority")} />}
@@ -32,7 +33,7 @@ export async function IssueTable({ rows, showOffice = true }: { rows: StaffRow[]
                 </span>
               </p>
               <p className="mt-0.5 text-xs text-muted">
-                PG-{String(r.seq).padStart(5, "0")} · {c(r.categoryId)} · {a(r.upazilaId)} · <TimeAgo date={r.createdAt} />
+                {refCode(r.seq)} · {c(r.categoryId)} · {a(r.upazilaId)} · <TimeAgo date={r.createdAt} />
                 {showOffice && r.stakeholderNameEn && <> · {lang === "bn" && r.stakeholderNameBn ? r.stakeholderNameBn : r.stakeholderNameEn}</>}
               </p>
             </div>

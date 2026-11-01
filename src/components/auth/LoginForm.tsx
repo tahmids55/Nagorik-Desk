@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import { FormAlert, FormSuccess, SubmitButton } from "@/components/ui/forms";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useI18n } from "@/i18n/client";
 import { login } from "@/server/actions/auth";
 
@@ -28,7 +29,7 @@ export function LoginForm({ next, justReset, emailResetEnabled }: { next?: strin
             {t("forgot_password")}
           </Link>
         </div>
-        <input id="password" name="password" type="password" autoComplete="current-password" required className="input" />
+        <PasswordInput id="password" name="password" autoComplete="current-password" required />
         {!emailResetEnabled && <span className="sr-only">{t("reset_by_admin")}</span>}
       </div>
       <FormAlert state={state} />

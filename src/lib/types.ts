@@ -37,6 +37,8 @@ export type IssueCardDTO = {
   saved: boolean;
   images: string[];
   hidden: boolean;
+  /** Metres from the viewer, only when the feed is sorted "near me" */
+  distanceM?: number;
 };
 
 export type TimelineEntryDTO = {

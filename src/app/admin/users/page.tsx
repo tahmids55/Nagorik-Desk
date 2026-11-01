@@ -29,7 +29,7 @@ export default async function AdminUsers({ searchParams }: { searchParams: SP })
       <h1 className="text-2xl font-semibold">{t("admin_users")}</h1>
       <p className="max-w-2xl text-sm text-muted">{t("admin_users_hint")}</p>
 
-      <form className="card rounded-[4px] shadow-none grid gap-3 p-4 sm:grid-cols-[1fr_200px_auto]" role="search">
+      <form className="card rounded-[4px] shadow-none grid grid-cols-1 gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_200px_auto]" role="search">
         <input name="q" defaultValue={q} className="input rounded-[3px]" placeholder={t("search_users_ph")} aria-label={t("search_users_ph")} maxLength={80} />
         <select name="role" defaultValue={role ?? ""} className="input rounded-[3px]" aria-label={t("role")}>
           <option value="">{t("all_roles")}</option>
@@ -41,6 +41,7 @@ export default async function AdminUsers({ searchParams }: { searchParams: SP })
       <ul className="card rounded-[4px] shadow-none divide-y divide-line overflow-hidden">
         {rows.map((u) => {
           const self = u.id === session?.user.id;
+          const roleLabel = `${t(`role_${u.role}` as TKey)}${u.stakeholderName ? ` · ${u.stakeholderName}` : ""}`;
           return (
             <li key={u.id}>
               <details className="group">
@@ -54,11 +55,12 @@ export default async function AdminUsers({ searchParams }: { searchParams: SP })
                       {u.role !== "citizen" && u.mfaEnabled && <ShieldCheck className="h-4 w-4 text-ok" aria-label={t("mfa_active")} />}
                     </span>
                     <span className="block truncate text-xs text-muted">{u.email}</span>
+                    {/* Phones: the role sits under the email so long office names never squeeze the name. */}
+                    <span className="mt-1 inline-block max-w-full truncate rounded-[2px] border border-line px-2 py-0.5 text-xs font-medium text-muted sm:hidden">{roleLabel}</span>
                   </span>
                   <span className="hidden text-xs text-faint sm:block"><TimeAgo date={u.createdAt} /></span>
-                  <span className="rounded-[2px] border border-line px-2 py-0.5 text-xs font-medium text-muted">
-                    {t(`role_${u.role}` as TKey)}
-                    {u.stakeholderName && ` · ${u.stakeholderName}`}
+                  <span className="hidden max-w-[260px] truncate rounded-[2px] border border-line px-2 py-0.5 text-xs font-medium text-muted sm:inline-block" title={roleLabel}>
+                    {roleLabel}
                   </span>
                   {u.status === "suspended" && (
                     <span className="inline-flex items-center gap-1.5 text-xs font-medium text-danger">

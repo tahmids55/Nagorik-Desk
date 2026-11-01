@@ -27,7 +27,7 @@ export function ReporterFollowUp({ issueId }: { issueId: string }) {
     });
 
   return (
-    <section className="rounded-[4px] border border-line bg-surface p-5" aria-labelledby="followup-title">
+    <section className="rounded-[4px] border border-line bg-surface p-3.5 sm:p-5" aria-labelledby="followup-title">
       <h2 id="followup-title" className="text-base font-semibold">
         {t("followup_title")}
       </h2>

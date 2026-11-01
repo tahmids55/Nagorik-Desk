@@ -22,7 +22,7 @@ export default async function StakeholdersPage() {
         <p className="mt-1 max-w-2xl text-sm text-muted">{t("stakeholders_intro")}</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <section aria-labelledby="list-h" className="space-y-3">
           <h2 id="list-h" className="text-lg font-semibold">{t("offices_list")}</h2>
           {offices.length === 0 ? (
@@ -77,11 +77,11 @@ export default async function StakeholdersPage() {
         </section>
 
         <div className="space-y-6">
-          <section className="card rounded-[4px] shadow-none p-5" aria-labelledby="add-h">
+          <section className="card rounded-[4px] p-4 shadow-none sm:p-5" aria-labelledby="add-h">
             <h2 id="add-h" className="mb-4 text-lg font-semibold">{t("add_office")}</h2>
             <StakeholderForm upazilas={upazilas} submit={t("add_office_btn")} />
           </section>
-          <section className="card rounded-[4px] shadow-none p-5" aria-labelledby="appoint-h">
+          <section className="card rounded-[4px] p-4 shadow-none sm:p-5" aria-labelledby="appoint-h">
             <h2 id="appoint-h" className="text-lg font-semibold">{t("appoint_officer")}</h2>
             <p className="mb-4 mt-1 text-sm text-muted">{t("appoint_officer_hint")}</p>
             <AppointForm offices={active.map((o) => ({ id: o.id, name: nm(o) }))} />

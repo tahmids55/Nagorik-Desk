@@ -2,8 +2,9 @@
 
 import { Bookmark, Briefcase, ChevronDown, LogOut, Settings, Shield, User, Wrench } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Avatar } from "@/components/ui/Avatar";
+import { useDismiss } from "@/hooks/useDismiss";
 import { useI18n } from "@/i18n/client";
 import type { Role } from "@/lib/constants";
 import { logout } from "@/server/actions/auth";
@@ -15,17 +16,7 @@ export function UserMenu({ id, name, avatarMediaId, role }: { id: string; name: 
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
+  useDismiss(open, () => setOpen(false), ref);
 
   const item = "flex w-full items-center gap-3 rounded-[3px] px-3 py-2 text-left text-sm font-normal hover:bg-neutral-fill";
   const portal =
@@ -48,7 +39,7 @@ export function UserMenu({ id, name, avatarMediaId, role }: { id: string; name: 
         <ChevronDown className="mr-1 hidden h-4 w-4 text-muted sm:block" aria-hidden="true" />
       </button>
       {open && (
-        <div role="menu" className="absolute right-0 top-full z-50 mt-2 w-64 max-h-[calc(100dvh-4.5rem)] overflow-y-auto scroll-thin rounded-[4px] border border-line bg-surface p-2 shadow-popover">
+        <div role="menu" className="scroll-thin absolute right-0 top-full z-50 mt-2 max-h-[calc(100dvh-4.5rem)] w-64 origin-top-right animate-pop-in overflow-y-auto rounded-[4px] border border-line bg-surface p-2 shadow-popover">
           <Link href={`/u/${id}`} className="mb-1 flex items-center gap-3 rounded-[3px] p-2 hover:bg-neutral-fill" onClick={() => setOpen(false)}>
             <Avatar name={name} mediaId={avatarMediaId} size="md" />
             <span className="min-w-0">

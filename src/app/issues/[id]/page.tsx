@@ -10,6 +10,7 @@ import { RestoreButton } from "@/components/admin/RestoreButton";
 import { AuthorityPanel } from "@/components/staff/AuthorityPanel";
 import { OfficePanel, type PendingExtension } from "@/components/staff/OfficePanel";
 import { getT } from "@/i18n/server";
+import { refCode } from "@/lib/issue";
 import { getSession } from "@/server/auth/session";
 import { decorate } from "@/server/queries/feed";
 import { findSimilar, getComments, getIssue, getTimeline } from "@/server/queries/issues";
@@ -49,15 +50,15 @@ export default async function IssuePage({ params }: Props) {
   const stakeholders = role === "office" ? (await getStakeholders({ activeOnly: true })).map((s) => ({ id: s.id, name: lang === "bn" && s.nameBn ? s.nameBn : s.nameEn, upazilaId: s.upazilaId })) : [];
 
   return (
-    <div className="mx-auto w-full max-w-[720px] space-y-4 px-3 py-5 sm:px-4">
+    <div className="mx-auto w-full max-w-[720px] space-y-3 px-3 py-4 sm:space-y-4 sm:px-4 sm:py-5">
       {/* Top Breadcrumb & Reference Bar */}
       <div className="flex items-center justify-between">
-        <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink">
+        <Link href="/" className="inline-flex min-h-[32px] items-center gap-1.5 text-sm font-medium text-muted hover:text-ink">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           {t("back_to_feed")}
         </Link>
-        <span className="font-mono text-xs font-semibold px-2.5 py-1 rounded-[2px] bg-surface border border-line text-muted tabular-nums">
-          PG-{String(issue.seq).padStart(5, "0")}
+        <span className="rounded-[2px] border border-line bg-surface px-2.5 py-1 font-mono text-xs font-semibold tabular-nums text-muted" title={t("reference")}>
+          {refCode(issue.seq)}
         </span>
       </div>
 
@@ -102,7 +103,7 @@ export default async function IssuePage({ params }: Props) {
       </section>
 
       {issue.mpPriority && issue.mpCommitment && (
-        <section className="rounded-[4px] border border-brand/40 bg-brand-soft p-5 shadow-none">
+        <section className="rounded-[4px] border border-brand/40 bg-brand-soft p-3.5 shadow-none sm:p-5">
           <h2 className="text-sm font-semibold text-brand">{t("mp_commitment")}</h2>
           <p className="mt-1.5 text-[15px]" data-ugc>
             {issue.mpCommitment}

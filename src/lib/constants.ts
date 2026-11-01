@@ -33,7 +33,8 @@ export type UpdateKind = (typeof UPDATE_KINDS)[number];
 export const FLAG_REASONS = ["spam", "abuse", "personal_data", "false_info", "other"] as const;
 export type FlagReason = (typeof FLAG_REASONS)[number];
 
-export const SORTS = ["hot", "top", "new"] as const;
+/** `near` needs the viewer's position (`near=lat,lng` in the URL); without it the feed falls back to `hot`. */
+export const SORTS = ["hot", "top", "new", "near"] as const;
 export type Sort = (typeof SORTS)[number];
 
 export const LANGS = ["en", "bn"] as const;

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useFormState } from "react-dom";
 import { FieldError, FormAlert, FormSuccess, SubmitButton } from "@/components/ui/forms";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useI18n } from "@/i18n/client";
 import { LIMITS } from "@/lib/constants";
 import { requestPasswordReset, resetPassword } from "@/server/actions/auth";
@@ -44,7 +45,7 @@ export function ForgotForm() {
             <label htmlFor="password" className="label">
               {t("new_password")}
             </label>
-            <input id="password" name="password" type="password" autoComplete="new-password" required minLength={LIMITS.passwordMin} className="input" />
+            <PasswordInput id="password" name="password" autoComplete="new-password" required minLength={LIMITS.passwordMin} />
             <FieldError state={resState} name="password" />
           </div>
           <FormAlert state={resState} />
